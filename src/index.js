@@ -1,8 +1,10 @@
 const
     React = require('react'),
+    {useEffect} = React,
     ReactDOM = require('react-dom'),
     {Web3Provider} = require('@ethersproject/providers'),
-    {Web3ReactProvider} = require('@web3-react/core'),
+    {Web3ReactProvider, useWeb3React} = require('@web3-react/core'),
+    init = require('./init'),
     WalletManager = require('./WalletManager')
 
 
@@ -15,8 +17,19 @@ const boot = () => {
 
 const App = () =>
     <Web3ReactProvider getLibrary={provider => new Web3Provider(provider)}>
-        <WalletManager />
+        <AppInitializer>
+            <WalletManager />
+        </AppInitializer>
     </Web3ReactProvider>
+
+
+const AppInitializer = ({children}) => {
+    const web3React = useWeb3React()
+
+    useEffect(() => init({web3React}), [])
+
+    return children
+}
 
 
 boot()

@@ -1,21 +1,9 @@
 const
     React = require('react'),
+    {useCallback} = React,
     {useWeb3React} = require('@web3-react/core'),
-    {InjectedConnector} = require('@web3-react/injected-connector'),
-    {WalletConnectConnector} = require('@web3-react/walletconnect-connector'),
-    {entries} = Object,
-    {DEVCHAIN_ID, DEVCHAIN_URL} = process.env
-
-
-const connectors = {
-    MetaMask: new InjectedConnector({
-        supportedChainIds: [Number(DEVCHAIN_ID)],
-    }),
-
-    WalletConnect: new WalletConnectConnector({
-        rpc: {[DEVCHAIN_ID]: DEVCHAIN_URL},
-    }),
-}
+    connectorFactories = require('./web3Connectors'),
+    {entries} = Object
 
 
 const WalletManager = () => {
@@ -27,27 +15,42 @@ const WalletManager = () => {
 }
 
 
-const WalletConnector = ({w3}) => <>
-    <h2 children='Connect your thing' />
+const WalletConnector = ({w3}) => {
+    const activate = useCallback(async (connectorFactory, providerName) => {
+        const connector = connectorFactory()
+        await w3.activate(connector, console.error)
+        localStorage.setItem('lastWeb3Service', providerName)
+    })
 
-    {entries(connectors).map(([providerName, connector]) =>
+    return <>
+        <h2 children='Connect your thing' />
+
+        {entries(connectorFactories).map(([providerName, connectorFactory]) =>
+            <button
+                key={providerName}
+                children={providerName}
+                onClick={() => activate(connectorFactory, providerName)}
+            />,
+        )}
+    </>
+}
+
+
+const WalletInfo = ({w3}) => {
+    const deactivate = useCallback(async () => {
+        await w3.deactivate()
+        localStorage.removeItem('lastWeb3Service')
+    })
+
+    return <>
+        <h2 children={w3.account} />
+
         <button
-            key={providerName}
-            children={providerName}
-            onClick={() => w3.activate(connector, console.error)}
-        />,
-    )}
-</>
-
-
-const WalletInfo = ({w3}) => <>
-    <h2 children={w3.account} />
-
-    <button
-        children='Disconnect'
-        onClick={w3.deactivate}
-    />
-</>
+            children='Disconnect'
+            onClick={deactivate}
+        />
+    </>
+}
 
 
 module.exports = WalletManager
