@@ -15,9 +15,12 @@ const initWeb3 = async web3React => {
     if (!lastWeb3Service)
         return
 
-    const connector = connectorFactories[lastWeb3Service]()
+    const
+        connector = connectorFactories[lastWeb3Service](),
+        provider = new Web3Provider(await connector.getProvider())
 
     await web3React.activate(connector, console.error)
+    reinitContracts(provider)
 }
 
 
