@@ -4,7 +4,7 @@ const
     ReactDOM = require('react-dom'),
     {Web3Provider} = require('@ethersproject/providers'),
     {Web3ReactProvider, useWeb3React} = require('@web3-react/core'),
-    init = require('./init'),
+    {init} = require('./init'),
     WalletManager = require('./WalletManager')
 
 

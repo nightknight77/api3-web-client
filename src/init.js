@@ -1,4 +1,7 @@
-const web3ConnectorFactories = require('./web3Connectors')
+const
+    {Web3Provider} = require('@ethersproject/providers'),
+    {connectorFactories} = require('./web3Connectors'),
+    {reinitContracts} = require('./contracts')
 
 
 const init = ({web3React}) => {
@@ -12,10 +15,13 @@ const initWeb3 = async web3React => {
     if (!lastWeb3Service)
         return
 
-    const connector = web3ConnectorFactories[lastWeb3Service]()
+    const connector = connectorFactories[lastWeb3Service]()
 
     await web3React.activate(connector, console.error)
 }
 
 
-module.exports = init
+module.exports = {
+    init,
+    initWeb3,
+}

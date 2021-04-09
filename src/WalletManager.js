@@ -2,8 +2,8 @@ const
     React = require('react'),
     {useCallback} = React,
     {useWeb3React} = require('@web3-react/core'),
-    connectorFactories = require('./web3Connectors'),
-    {entries} = Object
+    {initWeb3} = require('./init'),
+    {availableServices} = require('./web3Connectors')
 
 
 const WalletManager = () => {
@@ -16,20 +16,19 @@ const WalletManager = () => {
 
 
 const WalletConnector = ({w3}) => {
-    const activate = useCallback(async (connectorFactory, providerName) => {
-        const connector = connectorFactory()
-        await w3.activate(connector, console.error)
+    const activate = useCallback(async providerName => {
         localStorage.setItem('lastWeb3Service', providerName)
+        await initWeb3(w3)
     })
 
     return <>
         <h2 children='Connect your thing' />
 
-        {entries(connectorFactories).map(([providerName, connectorFactory]) =>
+        {availableServices.map(providerName =>
             <button
                 key={providerName}
                 children={providerName}
-                onClick={() => activate(connectorFactory, providerName)}
+                onClick={() => activate(providerName)}
             />,
         )}
     </>
