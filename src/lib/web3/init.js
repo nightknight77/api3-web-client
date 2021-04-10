@@ -14,14 +14,13 @@ const initWeb3 = async web3Ctx => {
     const
         connector = connectorFactories[lastWeb3Service](),
         provider = new Web3Provider(await connector.getProvider()),
-        account = await connector.getAccount(),
         lastBlock = await provider.getBlock(),
         contracts = mapValues(contractFactories, cFactory => cFactory(provider))
 
     await web3Ctx.activate(connector, console.error)
     web3Ctx.update({contracts})
 
-    const updateWeb3Numbers = async fromBlock => {
+    const updateWeb3Numbers = async (account, fromBlock) => {
         const setters =
             await promiseAllObj(
                 mapValues(stateVars, conf =>
@@ -35,8 +34,17 @@ const initWeb3 = async web3Ctx => {
             ))
     }
 
-    provider.on('block', blockNo =>
-        updateWeb3Numbers(blockNo === lastBlock.number ? 0 : blockNo))
+    connector.on('Web3ReactUpdate', ({account}) =>
+        updateWeb3Numbers(account, 0))
+
+    provider.on('block', async blockNo => {
+        const account = await connector.getAccount()
+
+        updateWeb3Numbers(
+            account,
+            blockNo === lastBlock.number ? 0 : blockNo,
+        )
+    })
 }
 
 
