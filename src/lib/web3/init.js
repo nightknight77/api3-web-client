@@ -1,9 +1,28 @@
 const
+    EventEmitter = require('events'),
     {Web3Provider} = require('@ethersproject/providers'),
     {promiseAllObj} = require('lib/util'),
     {connectorFactories, contractFactories, stateVars} = require('./config'),
     {initialWeb3AccountValue} = require('./context'),
     {mapValues} = require('lodash-es')
+
+
+const web3Events = new EventEmitter()
+
+
+web3Events.on('activate', ({serviceName}) =>
+    localStorage.setItem('lastWeb3Service', serviceName))
+
+web3Events.on('deactivate', () =>
+    localStorage.removeItem('lastWeb3Service'))
+
+
+const initWeb3 = web3Ctx => {
+    const lastWeb3Service = localStorage.getItem('lastWeb3Service')
+
+    if (lastWeb3Service)
+        activateWeb3(lastWeb3Service, web3Ctx)
+}
 
 
 const state = {
@@ -13,18 +32,14 @@ const state = {
 }
 
 
-const initWeb3 = async web3Ctx => {
-    const lastWeb3Service = localStorage.getItem('lastWeb3Service')
-
-    if (!lastWeb3Service)
-        return
-
+const activateWeb3 = async (serviceName, web3Ctx) => {
     const
-        connector = connectorFactories[lastWeb3Service](),
+        connector = connectorFactories[serviceName](),
         initialAccount = await connector.getAccount(),
         initialProvider = new Web3Provider(await connector.getProvider())
 
-    await web3Ctx.activate(connector, console.error)
+    await web3Ctx.activate(connector, null, true)
+    web3Events.emit('activate', {serviceName})
 
     const updateWeb3Numbers = async fromBlock => {
         const setters =
@@ -83,5 +98,7 @@ const initWeb3 = async web3Ctx => {
 
 
 module.exports = {
+    web3Events,
     initWeb3,
+    activateWeb3,
 }

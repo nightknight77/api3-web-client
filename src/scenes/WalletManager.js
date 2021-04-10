@@ -1,6 +1,6 @@
 const
-    {createElement, Fragment, useCallback} = require('react'),
-    {availableServices, initWeb3, useWeb3} = require('lib/web3'),
+    {createElement, Fragment} = require('react'),
+    {availableServices, activateWeb3, useWeb3} = require('lib/web3'),
     {Card} = require('lib/ui')
 
 
@@ -16,41 +16,29 @@ const WalletManager = () => {
 }
 
 
-const WalletConnector = ({web3}) => {
-    const activate = useCallback(async providerName => {
-        localStorage.setItem('lastWeb3Service', providerName)
-        await initWeb3(web3)
-    })
-
-    return <>
+const WalletConnector = ({web3}) =>
+    <>
         <h2 children='Connect your thing' />
 
-        {availableServices.map(providerName =>
+        {availableServices.map(serviceName =>
             <button
-                key={providerName}
-                children={providerName}
-                onClick={() => activate(providerName)}
+                key={serviceName}
+                children={serviceName}
+                onClick={() => activateWeb3(serviceName, web3)}
             />,
         )}
     </>
-}
 
 
-const WalletInfo = ({web3}) => {
-    const deactivate = useCallback(async () => {
-        await web3.deactivate()
-        localStorage.removeItem('lastWeb3Service')
-    })
-
-    return <>
+const WalletInfo = ({web3}) =>
+    <>
         <h2 children={web3.account} />
 
         <button
             children='Disconnect'
-            onClick={deactivate}
+            onClick={web3.deactivate}
         />
     </>
-}
 
 
 module.exports = WalletManager
