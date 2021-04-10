@@ -1,24 +1,25 @@
 const
     React = require('react'),
     {useCallback} = React,
-    {useWeb3React} = require('@web3-react/core'),
-    {initWeb3} = require('./init'),
-    {availableServices} = require('./web3Connectors')
+    {availableServices, initWeb3, useWeb3} = require('lib/web3')
 
 
 const WalletManager = () => {
-    const w3 = useWeb3React()
+    const web3 = useWeb3()
 
-    return w3.active
-        ? <WalletInfo w3={w3} />
-        : <WalletConnector w3={w3} />
+    return <>
+        {web3.active
+            ? <WalletInfo web3={web3} />
+            : <WalletConnector web3={web3} />
+        }
+    </>
 }
 
 
-const WalletConnector = ({w3}) => {
+const WalletConnector = ({web3}) => {
     const activate = useCallback(async providerName => {
         localStorage.setItem('lastWeb3Service', providerName)
-        await initWeb3(w3)
+        await initWeb3(web3)
     })
 
     return <>
@@ -35,14 +36,14 @@ const WalletConnector = ({w3}) => {
 }
 
 
-const WalletInfo = ({w3}) => {
+const WalletInfo = ({web3}) => {
     const deactivate = useCallback(async () => {
-        await w3.deactivate()
+        await web3.deactivate()
         localStorage.removeItem('lastWeb3Service')
     })
 
     return <>
-        <h2 children={w3.account} />
+        <h2 children={web3.account} />
 
         <button
             children='Disconnect'

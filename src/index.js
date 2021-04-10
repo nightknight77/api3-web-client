@@ -2,10 +2,8 @@ const
     React = require('react'),
     {useEffect} = React,
     ReactDOM = require('react-dom'),
-    {Web3Provider} = require('@ethersproject/providers'),
-    {Web3ReactProvider, useWeb3React} = require('@web3-react/core'),
-    {init} = require('./init'),
-    WalletManager = require('./WalletManager')
+    {Web3Provider, useWeb3, initWeb3} = require('./lib/web3'),
+    {Landing} = require('./scenes')
 
 
 const boot = () => {
@@ -15,18 +13,17 @@ const boot = () => {
         module.hot.accept()
 }
 
+
 const App = () =>
-    <Web3ReactProvider getLibrary={provider => new Web3Provider(provider)}>
-        <AppInitializer>
-            <WalletManager />
-        </AppInitializer>
-    </Web3ReactProvider>
+    <Web3Provider children={
+        <AppInitializer children={
+            <Landing />} />} />
 
 
 const AppInitializer = ({children}) => {
-    const web3React = useWeb3React()
+    const web3Ctx = useWeb3()
 
-    useEffect(() => init({web3React}), [])
+    useEffect(() => initWeb3(web3Ctx), [])
 
     return children
 }
