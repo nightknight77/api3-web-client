@@ -28,11 +28,14 @@ const Web3Provider = ({children}) => {
                 ...web3AccountState,
 
                 update: patch =>
-                    setWeb3AccountState(prevState =>
-                        typeof patch === 'function'
+                    setWeb3AccountState(prevState => ({
+                        ...prevState,
+
+                        ...(typeof patch === 'function'
                             ? patch(prevState)
-                            : {...prevState, ...patch},
-                    ),
+                            : patch
+                        ),
+                    })),
             }}
         >
             {children}
