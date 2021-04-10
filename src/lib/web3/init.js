@@ -1,5 +1,6 @@
 const
     {Web3Provider} = require('@ethersproject/providers'),
+    {BigNumber} = require('@ethersproject/bignumber'),
     {connectorFactories} = require('./connectors'),
     {reinitContracts} = require('./contracts')
 
@@ -19,17 +20,33 @@ const initWeb3 = async web3Ctx => {
 
     const
         {pool: pc} = reinitContracts(provider),
-        stakeAmount = await pc.balanceOf(account),
-        depositEvents = await pc.queryFilter(pc.filters.Deposited(account)),
-        depositAmount =
-            depositEvents.reduce((sum, e) => e.args.amount.add(sum), 0)
+        lastBlock = await provider.getBlock()
 
-    const patch = {
-        depositAmount: depositAmount.toString(),
-        stakeAmount: stakeAmount.toString(),
+    const updateWeb3Numbers = async (fromBlock = 0) => {
+        const
+            [stakeAmount, depositEvents] = await Promise.all([
+                pc.balanceOf(account),
+                pc.queryFilter(pc.filters.Deposited(account), fromBlock),
+            ]),
+
+            depositAmount =
+                depositEvents.reduce(
+                    (sum, e) => e.args.amount.add(sum),
+                    BigNumber.from(0),
+                )
+
+        web3Ctx.update(prevState => ({
+            stakeAmount,
+            depositAmount: prevState.depositAmount.add(depositAmount),
+        }))
     }
 
-    web3Ctx.update(patch)
+    provider.on('block', async bNo => {
+        if (bNo !== lastBlock.number)
+            await updateWeb3Numbers(bNo)
+    })
+
+    await updateWeb3Numbers()
 }
 
 

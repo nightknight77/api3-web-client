@@ -11,8 +11,8 @@ const PoolManager = () => {
         <h2 children='Pool' />
 
         <ul>
-            <li>Deposited: {web3.depositAmount}</li>
-            <li>Staked: {web3.stakeAmount}</li>
+            <li>Deposited: {web3.depositAmount.toString()}</li>
+            <li>Staked: {web3.stakeAmount.toString()}</li>
         </ul>
     </Card>
 }

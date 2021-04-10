@@ -1,12 +1,13 @@
 const
     {createElement, createContext, useContext, useState} = require('react'),
     {Web3Provider: Web3EthersProvider} = require('@ethersproject/providers'),
+    {BigNumber} = require('@ethersproject/bignumber'),
     {Web3ReactProvider, useWeb3React} = require('@web3-react/core')
 
 
 const initialWeb3AccountValue = {
-    depositAmount: null,
-    stakeAmount: null,
+    depositAmount: BigNumber.from(0),
+    stakeAmount: BigNumber.from(0),
 }
 
 
@@ -25,7 +26,11 @@ const Web3Provider = ({children}) => {
                 ...web3AccountState,
 
                 update: patch =>
-                    setWeb3AccountState(prevState => ({...prevState,...patch})),
+                    setWeb3AccountState(prevState => {
+                        return typeof patch === 'function'
+                            ? patch(prevState)
+                            : {...prevState, ...patch}
+                    }),
             }}
         >
             {children}
