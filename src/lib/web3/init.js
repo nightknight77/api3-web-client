@@ -2,7 +2,15 @@ const
     {Web3Provider} = require('@ethersproject/providers'),
     {promiseAllObj} = require('lib/util'),
     {connectorFactories, contractFactories, stateVars} = require('./config'),
+    {initialWeb3AccountValue} = require('./context'),
     {mapValues} = require('lodash-es')
+
+
+const state = {
+    account: null,
+    provider: null,
+    contracts: null,
+}
 
 
 const initWeb3 = async web3Ctx => {
@@ -13,18 +21,21 @@ const initWeb3 = async web3Ctx => {
 
     const
         connector = connectorFactories[lastWeb3Service](),
-        provider = new Web3Provider(await connector.getProvider()),
-        lastBlock = await provider.getBlock(),
-        contracts = mapValues(contractFactories, cFactory => cFactory(provider))
+        initialAccount = await connector.getAccount(),
+        initialProvider = new Web3Provider(await connector.getProvider())
 
     await web3Ctx.activate(connector, console.error)
-    web3Ctx.update({contracts})
 
-    const updateWeb3Numbers = async (account, fromBlock) => {
+    const updateWeb3Numbers = async fromBlock => {
         const setters =
             await promiseAllObj(
                 mapValues(stateVars, conf =>
-                    conf.updater({contracts, provider, account, fromBlock})))
+                    conf.updater({
+                        fromBlock,
+                        account: state.account,
+                        provider: state.provider,
+                        contracts: state.contracts,
+                    })))
 
         web3Ctx.update(prevState =>
             mapValues(setters, (s, propName) =>
@@ -34,16 +45,39 @@ const initWeb3 = async web3Ctx => {
             ))
     }
 
-    connector.on('Web3ReactUpdate', ({account}) =>
-        updateWeb3Numbers(account, 0))
+    connector.on('Web3ReactUpdate', ({account, provider}) => {
+        web3Ctx.update(initialWeb3AccountValue)
 
-    provider.on('block', async blockNo => {
-        const account = await connector.getAccount()
+        if (account) {
+            state.account = account
 
-        updateWeb3Numbers(
-            account,
-            blockNo === lastBlock.number ? 0 : blockNo,
-        )
+            if (!provider)
+                updateWeb3Numbers(0)
+        }
+
+        if (provider) {
+            let handledFirstEvent = false
+
+            state.provider = provider
+            state.contracts =
+                mapValues(contractFactories, cFactory => cFactory(provider))
+
+            web3Ctx.update({contracts: state.contracts})
+
+            provider.on('block', blockNo => {
+                if (handledFirstEvent)
+                    updateWeb3Numbers(blockNo)
+                else {
+                    updateWeb3Numbers(0)
+                    handledFirstEvent = true
+                }
+            })
+        }
+    })
+
+    connector.emit('Web3ReactUpdate', {
+        account: initialAccount,
+        provider: initialProvider,
     })
 }
 
