@@ -4,7 +4,9 @@ const
     {InjectedConnector} = require('@web3-react/injected-connector'),
     {WalletConnectConnector} = require('@web3-react/walletconnect-connector'),
     poolABI = require('./contracts/pool-abi'),
-    {DEVCHAIN_ID, DEVCHAIN_URL, POOL_CONTRACT_ADDR} = process.env,
+    tokenABI = require('./contracts/token-abi'),
+    {DEVCHAIN_ID, DEVCHAIN_URL,
+        POOL_CONTRACT_ADDR, TOKEN_CONTRACT_ADDR} = process.env,
     {keys} = Object
 
 
@@ -19,6 +21,7 @@ const connectorFactories = {
 
 const contractFactories = {
     pool: provider => new Contract(POOL_CONTRACT_ADDR, poolABI, provider),
+    token: provider => new Contract(TOKEN_CONTRACT_ADDR, tokenABI, provider),
 }
 
 
