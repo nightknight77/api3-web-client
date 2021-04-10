@@ -20,8 +20,8 @@ const connectorFactories = {
 
 
 const contractFactories = {
-    pool: provider => new Contract(POOL_CONTRACT_ADDR, poolABI, provider),
-    token: provider => new Contract(TOKEN_CONTRACT_ADDR, tokenABI, provider),
+    pool: signer => new Contract(POOL_CONTRACT_ADDR, poolABI, signer),
+    token: signer => new Contract(TOKEN_CONTRACT_ADDR, tokenABI, signer),
 }
 
 

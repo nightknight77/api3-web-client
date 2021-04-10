@@ -60,7 +60,7 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
             ))
     }
 
-    connector.on('Web3ReactUpdate', ({account, provider}) => {
+    connector.on('Web3ReactUpdate', async ({account, provider}) => {
         web3Ctx.update(initialWeb3AccountValue)
 
         if (account) {
@@ -71,11 +71,12 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
         }
 
         if (provider) {
+            const signer = await provider.getSigner()
             let handledFirstEvent = false
 
             state.provider = provider
             state.contracts =
-                mapValues(contractFactories, cFactory => cFactory(provider))
+                mapValues(contractFactories, cFactory => cFactory(signer))
 
             web3Ctx.update({contracts: state.contracts})
 
