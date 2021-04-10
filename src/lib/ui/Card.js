@@ -1,4 +1,4 @@
-const React = require('react')
+const {createElement} = require('react')
 
 
 const Card = ({children}) =>

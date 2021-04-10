@@ -1,5 +1,5 @@
 const
-    React = require('react'),
+    {createElement, Fragment} = require('react'),
     WalletManager = require('./WalletManager'),
     PoolManager = require('./PoolManager')
 

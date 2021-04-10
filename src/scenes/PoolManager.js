@@ -1,5 +1,5 @@
 const
-    React = require('react'),
+    {createElement} = require('react'),
     {useWeb3} = require('lib/web3'),
     {Card} = require('lib/ui')
 

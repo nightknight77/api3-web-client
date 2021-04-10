@@ -1,6 +1,5 @@
 const
-    React = require('react'),
-    {createContext, useContext, useState} = React,
+    {createElement, createContext, useContext, useState} = require('react'),
     {Web3Provider: Web3EthersProvider} = require('@ethersproject/providers'),
     {Web3ReactProvider, useWeb3React} = require('@web3-react/core')
 

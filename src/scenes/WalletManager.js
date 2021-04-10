@@ -1,6 +1,5 @@
 const
-    React = require('react'),
-    {useCallback} = React,
+    {createElement, Fragment, useCallback} = require('react'),
     {availableServices, initWeb3, useWeb3} = require('lib/web3'),
     {Card} = require('lib/ui')
 
