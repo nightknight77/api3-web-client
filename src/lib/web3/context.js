@@ -1,13 +1,14 @@
 const
     {createElement, createContext, useContext, useState} = require('react'),
     {Web3Provider: Web3EthersProvider} = require('@ethersproject/providers'),
-    {BigNumber} = require('@ethersproject/bignumber'),
-    {Web3ReactProvider, useWeb3React} = require('@web3-react/core')
+    {Web3ReactProvider, useWeb3React} = require('@web3-react/core'),
+    {mapValues} = require('lodash-es'),
+    {stateVars} = require('./config')
 
 
 const initialWeb3AccountValue = {
-    depositAmount: BigNumber.from(0),
-    stakeAmount: BigNumber.from(0),
+    contracts: {},
+    ...mapValues(stateVars, conf => conf.initial),
 }
 
 
@@ -26,11 +27,11 @@ const Web3Provider = ({children}) => {
                 ...web3AccountState,
 
                 update: patch =>
-                    setWeb3AccountState(prevState => {
-                        return typeof patch === 'function'
+                    setWeb3AccountState(prevState =>
+                        typeof patch === 'function'
                             ? patch(prevState)
-                            : {...prevState, ...patch}
-                    }),
+                            : {...prevState, ...patch},
+                    ),
             }}
         >
             {children}
