@@ -1,18 +1,19 @@
 const
     React = require('react'),
     {useCallback} = React,
-    {availableServices, initWeb3, useWeb3} = require('lib/web3')
+    {availableServices, initWeb3, useWeb3} = require('lib/web3'),
+    {Card} = require('lib/ui')
 
 
 const WalletManager = () => {
     const web3 = useWeb3()
 
-    return <>
+    return <Card>
         {web3.active
             ? <WalletInfo web3={web3} />
             : <WalletConnector web3={web3} />
         }
-    </>
+    </Card>
 }
 
 
