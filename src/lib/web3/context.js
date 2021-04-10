@@ -39,7 +39,15 @@ const useWeb3 = () => {
         web3React = useWeb3React(),
         web3Account = useContext(Web3AccountContext)
 
-    return {...web3React, ...web3Account}
+    return {
+        ...web3React,
+        ...web3Account,
+
+        deactivate: async () => {
+            await web3React.deactivate()
+            web3Account.update(initialWeb3AccountValue)
+        },
+    }
 }
 
 
