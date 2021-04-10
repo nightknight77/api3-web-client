@@ -1,20 +1,46 @@
 const
     React = require('react'),
+    {createContext, useContext, useState} = React,
     {Web3Provider: Web3EthersProvider} = require('@ethersproject/providers'),
     {Web3ReactProvider, useWeb3React} = require('@web3-react/core')
 
 
+const initialWeb3AccountValue = {
+    depositAmount: null,
+    stakeAmount: null,
+}
+
+
+const Web3AccountContext = createContext()
+
+
 const Web3Provider = ({children}) => {
+    const [web3AccountState, setWeb3AccountState] =
+        useState(initialWeb3AccountValue)
+
     return <Web3ReactProvider
         getLibrary={provider => new Web3EthersProvider(provider)}
     >
-        {children}
+        <Web3AccountContext.Provider
+            value={{
+                ...web3AccountState,
+
+                update: patch =>
+                    setWeb3AccountState(prevState => ({...prevState,...patch})),
+            }}
+        >
+            {children}
+        </Web3AccountContext.Provider>
     </Web3ReactProvider>
 }
 
 
 const useWeb3 = () => {
-    return useWeb3React()
+    const
+        web3React = useWeb3React(),
+        web3Account = useContext(Web3AccountContext)
+
+    return {...web3React, ...web3Account}
 }
 
 

@@ -12,10 +12,24 @@ const initWeb3 = async web3Ctx => {
 
     const
         connector = connectorFactories[lastWeb3Service](),
-        provider = new Web3Provider(await connector.getProvider())
+        provider = new Web3Provider(await connector.getProvider()),
+        account = await connector.getAccount()
 
     await web3Ctx.activate(connector, console.error)
-    reinitContracts(provider)
+
+    const
+        {pool: pc} = reinitContracts(provider),
+        stakeAmount = await pc.balanceOf(account),
+        depositEvents = await pc.queryFilter(pc.filters.Deposited(account)),
+        depositAmount =
+            depositEvents.reduce((sum, e) => e.args.amount.add(sum), 0)
+
+    const patch = {
+        depositAmount: depositAmount.toString(),
+        stakeAmount: stakeAmount.toString(),
+    }
+
+    web3Ctx.update(patch)
 }
 
 

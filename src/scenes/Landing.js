@@ -1,10 +1,12 @@
 const
     React = require('react'),
-    WalletManager = require('./WalletManager')
+    WalletManager = require('./WalletManager'),
+    PoolManager = require('./PoolManager')
 
 
 const Landing = () => <>
     <WalletManager />
+    <PoolManager />
 </>
 
 
