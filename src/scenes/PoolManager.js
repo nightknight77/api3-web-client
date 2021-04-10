@@ -14,11 +14,14 @@ const deposit = async (amount, web3) => {
     await web3.contracts.pool.deposit(web3.account, amount, web3.account)
 }
 
+const stake = (amount, web3) => web3.contracts.pool.stake(amount)
+
 
 const PoolManager = () => {
     const
         web3 = useWeb3(),
-        [depositAmount, setDepositAmount] = useState('')
+        [depositAmount, setDepositAmount] = useState(''),
+        [stakeAmount, setStakeAmount] = useState('')
 
     return <Card>
         <h2 children='Pool' />
@@ -40,6 +43,21 @@ const PoolManager = () => {
             <button
                 children='Deposit'
                 onClick={() => deposit(depositAmount, web3)}
+            />
+        </p>
+
+        <p>
+            <input
+                type='number'
+                value={stakeAmount}
+                placeholder='100'
+                onChange={e => setStakeAmount(e.target.value)}
+                style={{width: 50}}
+            />
+
+            <button
+                children='Stake'
+                onClick={() => stake(stakeAmount, web3)}
             />
         </p>
     </Card>
