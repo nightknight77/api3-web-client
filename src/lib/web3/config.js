@@ -82,6 +82,7 @@ const stateVars = {
 module.exports = {
     connectorFactories,
     availableServices: keys(connectorFactories),
+    contractAddresses,
     contractFactories,
     stateVars,
 }

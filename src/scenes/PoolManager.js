@@ -1,13 +1,15 @@
 const
     {createElement, useState} = require('react'),
-    {useWeb3} = require('lib/web3'),
-    {Card} = require('lib/ui'),
-    {POOL_CONTRACT_ADDR} = process.env
+    {useWeb3, contractAddresses} = require('lib/web3'),
+    {Card} = require('lib/ui')
 
 
 const deposit = async (amount, web3) => {
     const approveResp =
-        await web3.contracts.token.approve(POOL_CONTRACT_ADDR, amount)
+        await web3.contracts.token.approve(
+            contractAddresses[web3.chainId].pool,
+            amount,
+        )
 
     approveResp.wait()
 
