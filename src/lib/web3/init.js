@@ -3,7 +3,7 @@ const
     {Web3Provider} = require('@ethersproject/providers'),
     {promiseAllObj} = require('lib/util'),
     {connectorFactories, contractFactories, stateVars} = require('./config'),
-    {mapValues} = require('lodash-es')
+    {mapValues, debounce} = require('lodash-es')
 
 
 const web3Events = new EventEmitter()
@@ -61,7 +61,7 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
         )
     }
 
-    connector.on('Web3ReactUpdate', async ({account, chainId, provider}) => {
+    connector.on('Web3ReactUpdate', debounce(async ({account, chainId, provider}) => {
         web3Ctx.update(mapValues(stateVars, conf => conf.initial))
 
         if (account) {
@@ -95,7 +95,7 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
                 }
             })
         }
-    })
+    }, 50))
 
     connector.emit('Web3ReactUpdate', {
         account: initialAccount,
