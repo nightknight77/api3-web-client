@@ -41,6 +41,42 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
     await web3Ctx.activate(connector, null, true)
     web3Events.emit('activate', {serviceName})
 
+    const handleAccountOrChainChange = async ({account, chainId, provider}) => {
+        web3Ctx.update(mapValues(stateVars, conf => conf.initial))
+
+        if (account) {
+            state.account = account
+
+            if (!provider)
+                updateWeb3Numbers(0)
+        }
+
+        if (provider) {
+            const
+                ethersProvider = new Web3Provider(provider),
+                signer = await ethersProvider.getSigner()
+
+            let handledFirstEvent = false
+
+            state.provider = ethersProvider
+            state.contracts =
+                mapValues(
+                    contractFactories, cFactory =>
+                        cFactory(Number(chainId), signer))
+
+            web3Ctx.update({contracts: state.contracts})
+
+            ethersProvider.on('block', blockNo => {
+                if (handledFirstEvent)
+                    updateWeb3Numbers(blockNo)
+                else {
+                    updateWeb3Numbers(0)
+                    handledFirstEvent = true
+                }
+            })
+        }
+    }
+
     const updateWeb3Numbers = async fromBlock => {
         const setters =
             await promiseAllObj(
@@ -61,45 +97,7 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
         )
     }
 
-    connector.on('Web3ReactUpdate', debounce(
-        async ({account, chainId, provider}) => {
-            web3Ctx.update(mapValues(stateVars, conf => conf.initial))
-
-            if (account) {
-                state.account = account
-
-                if (!provider)
-                    updateWeb3Numbers(0)
-            }
-
-            if (provider) {
-                const
-                    ethersProvider = new Web3Provider(provider),
-                    signer = await ethersProvider.getSigner()
-
-                let handledFirstEvent = false
-
-                state.provider = ethersProvider
-                state.contracts =
-                    mapValues(
-                        contractFactories, cFactory =>
-                            cFactory(Number(chainId), signer))
-
-                web3Ctx.update({contracts: state.contracts})
-
-                ethersProvider.on('block', blockNo => {
-                    if (handledFirstEvent)
-                        updateWeb3Numbers(blockNo)
-                    else {
-                        updateWeb3Numbers(0)
-                        handledFirstEvent = true
-                    }
-                })
-            }
-        },
-
-        50,
-    ))
+    connector.on('Web3ReactUpdate', debounce(handleAccountOrChainChange, 50))
 
     connector.emit('Web3ReactUpdate', {
         account: initialAccount,
