@@ -3,7 +3,6 @@ const
     {Web3Provider} = require('@ethersproject/providers'),
     {promiseAllObj} = require('lib/util'),
     {connectorFactories, contractFactories, stateVars} = require('./config'),
-    {initialWeb3AccountValue} = require('./context'),
     {mapValues} = require('lodash-es')
 
 
@@ -58,11 +57,12 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
                 typeof s === 'function'
                     ? s(prevState[propName])
                     : s,
-            ))
+            )
+        )
     }
 
     connector.on('Web3ReactUpdate', async ({account, chainId, provider}) => {
-        web3Ctx.update(initialWeb3AccountValue)
+        web3Ctx.update(mapValues(stateVars, conf => conf.initial))
 
         if (account) {
             state.account = account

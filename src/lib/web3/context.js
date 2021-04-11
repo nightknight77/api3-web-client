@@ -65,5 +65,4 @@ const useWeb3 = () => {
 module.exports = {
     Web3Provider,
     useWeb3,
-    initialWeb3AccountValue,
 }
