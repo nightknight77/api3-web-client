@@ -98,7 +98,7 @@ module.exports = {
             {
                 test: /\.(png|svg)$/,
                 use: [{loader: 'file-loader', options: {
-                    name: '[name].[fullhash:8].[ext]',
+                    name: '[name].[hash:8].[ext]',
                 }}],
             },
         ],
