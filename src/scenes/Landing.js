@@ -1,6 +1,8 @@
 const
     {createElement, Fragment} = require('react'),
 
+    {useWeb3} = require('lib/web3'),
+
     {Card} = require('lib/ui'),
 
     components = [
@@ -9,10 +11,22 @@ const
         require('./Actions'),
     ],
 
+    Faucet = require('./Faucet'),
+
     logoImg = require('./logo.svg').default
 
 
-const Landing = () => <>
+const Landing = () => {
+    const
+        web3 = useWeb3(),
+
+        finalComponents = [
+            ...components,
+            web3.chainId === 4 && Faucet,
+        ]
+            .filter(Boolean)
+
+    return <>
     <h1 style={{textAlign: 'center'}}>
         <img src={logoImg} />
     </h1>
@@ -24,7 +38,7 @@ const Landing = () => <>
             alignItems: 'center',
             justifyContent: 'center',
         }}
-        children={components.map(c =>
+        children={finalComponents.map(c =>
             <Card
                 key={c.name}
                 style={{
@@ -38,7 +52,8 @@ const Landing = () => <>
             />
         )}
     />
-</>
+    </>
+}
 
 
 module.exports = Landing

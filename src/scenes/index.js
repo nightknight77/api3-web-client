@@ -3,4 +3,5 @@ module.exports = {
     WalletManager: require('./WalletManager'),
     State: require('./State'),
     Actions: require('./Actions'),
+    Faucet: require('./Faucet'),
 }
