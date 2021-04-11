@@ -77,9 +77,22 @@ const stateVars = {
                     depositEvents.reduce(
                         (sum, e) => e.args.amount.add(sum),
                         BigNumber.from(0),
+                    ),
+
+                withdrawEvents =
+                    await contracts.pool.queryFilter(
+                        contracts.pool.filters.Withdrawn(null, account),
+                        fromBlock,
+                    ),
+
+                newWithdrawAmount =
+                    withdrawEvents.reduce(
+                        (sum, e) => e.args.amount.add(sum),
+                        BigNumber.from(0),
                     )
 
-            return prevAmount => prevAmount.add(newDepositAmount)
+            return prevAmount =>
+                prevAmount.add(newDepositAmount).sub(newWithdrawAmount)
         },
     },
 }

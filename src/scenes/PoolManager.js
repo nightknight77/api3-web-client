@@ -21,6 +21,9 @@ const deposit = async (amount, web3) => {
     await web3.contracts.pool.deposit(web3.account, weiAmount, web3.account)
 }
 
+const withdraw = (amount, web3) =>
+    web3.contracts.pool.withdraw(web3.account, parseEther(amount))
+
 const stake = (amount, web3) =>
     web3.contracts.pool.stake(parseEther(amount))
 
@@ -52,6 +55,11 @@ const PoolManager = () => {
             <button
                 children='Deposit'
                 onClick={() => deposit(depositAmount, web3)}
+            />
+
+            <button
+                children='Withdraw'
+                onClick={() => withdraw(depositAmount, web3)}
             />
         </p>
 
