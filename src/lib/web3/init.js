@@ -99,7 +99,10 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
         )
     }
 
-    connector.on('Web3ReactUpdate', debounce(handleAccountOrChainChange, 50))
+    connector
+        .on('Web3ReactUpdate', debounce(handleAccountOrChainChange, 50))
+
+        .on('Web3ReactDeactivate', web3Ctx.deactivate)
 
     connector.emit('Web3ReactUpdate', {
         account: initialAccount,
