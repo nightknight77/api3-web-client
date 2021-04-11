@@ -35,6 +35,7 @@ const PoolManager = () => {
         <h2 children='Pool' />
 
         <ul>
+            <li>Balance: {fmtApi3(web3.api3Balance)}</li>
             <li>Deposited: {fmtApi3(web3.depositAmount)}</li>
             <li>Staked: {fmtApi3(web3.stakeAmount)}</li>
         </ul>

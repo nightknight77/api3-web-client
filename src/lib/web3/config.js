@@ -50,6 +50,12 @@ const contractFactories = {
 
 
 const stateVars = {
+    api3Balance: {
+        initial: BigNumber.from(0),
+
+        updater: ({contracts, account}) => contracts.token.balanceOf(account),
+    },
+
     stakeAmount: {
         initial: BigNumber.from(0),
 
