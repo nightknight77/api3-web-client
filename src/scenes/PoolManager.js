@@ -1,7 +1,6 @@
 const
     {createElement, useState} = require('react'),
-    {useWeb3, contractAddresses,
-        actions: {deposit, withdraw, stake}} = require('lib/web3'),
+    {useWeb3, actions: {deposit, withdraw, stake}} = require('lib/web3'),
     {fmtApi3} = require('lib/util'),
     {Card} = require('lib/ui')
 
