@@ -15,7 +15,7 @@ const Actions = () => {
             <Input
                 type='number'
                 value={depositAmount}
-                placeholder='100'
+                placeholder='0'
                 onChange={e => setDepositAmount(e.target.value)}
             />
 
@@ -36,7 +36,7 @@ const Actions = () => {
             <Input
                 type='number'
                 value={stakeAmount}
-                placeholder='100'
+                placeholder='0'
                 onChange={e => setStakeAmount(e.target.value)}
             />
 
