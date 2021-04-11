@@ -91,10 +91,7 @@ module.exports = {
                             // generate helpful class names:
                             localIdentName: '[local]--[fullhash:base64:10]',
                         },
-                        importLoaders: 1,
                     }},
-
-                    'postcss-loader',
                 ],
             },
 
