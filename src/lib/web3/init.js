@@ -36,7 +36,7 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
     const
         connector = connectorFactories[serviceName](),
         initialAccount = await connector.getAccount(),
-        initialProvider = new Web3Provider(await connector.getProvider()),
+        initialProvider = await connector.getProvider(),
         initialChainId = Number(await connector.getChainId())
 
     await web3Ctx.activate(connector, null, true)
@@ -72,17 +72,21 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
         }
 
         if (provider) {
-            const signer = await provider.getSigner()
+            const
+                ethersProvider = new Web3Provider(provider),
+                signer = await ethersProvider.getSigner()
+
             let handledFirstEvent = false
 
-            state.provider = provider
+            state.provider = ethersProvider
             state.contracts =
                 mapValues(
-                    contractFactories, cFactory => cFactory(chainId, signer))
+                    contractFactories, cFactory =>
+                        cFactory(Number(chainId), signer))
 
             web3Ctx.update({contracts: state.contracts})
 
-            provider.on('block', blockNo => {
+            ethersProvider.on('block', blockNo => {
                 if (handledFirstEvent)
                     updateWeb3Numbers(blockNo)
                 else {
