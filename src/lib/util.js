@@ -1,4 +1,6 @@
-const {keys, values, fromEntries} = Object
+const
+    {formatEther, commify} = require('@ethersproject/units'),
+    {keys, values, fromEntries} = Object
 
 
 const promiseAllObj = async promiseDict => {
@@ -10,6 +12,11 @@ const promiseAllObj = async promiseDict => {
 }
 
 
+// @param amount BigNumber
+const fmtApi3 = amount => commify(formatEther(amount))
+
+
 module.exports = {
     promiseAllObj,
+    fmtApi3,
 }

@@ -1,6 +1,7 @@
 const
     {createElement, useState} = require('react'),
     {useWeb3, contractAddresses} = require('lib/web3'),
+    {fmtApi3} = require('lib/util'),
     {Card} = require('lib/ui')
 
 
@@ -29,8 +30,8 @@ const PoolManager = () => {
         <h2 children='Pool' />
 
         <ul>
-            <li>Deposited: {web3.depositAmount.toString()}</li>
-            <li>Staked: {web3.stakeAmount.toString()}</li>
+            <li>Deposited: {fmtApi3(web3.depositAmount)}</li>
+            <li>Staked: {fmtApi3(web3.stakeAmount)}</li>
         </ul>
 
         <p>
