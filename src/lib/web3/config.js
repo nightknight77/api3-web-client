@@ -1,6 +1,7 @@
 const
     {Contract} = require('@ethersproject/contracts'),
     {BigNumber} = require('@ethersproject/bignumber'),
+    {parseEther} = require('@ethersproject/units'),
     {InjectedConnector} = require('@web3-react/injected-connector'),
     {WalletConnectConnector} = require('@web3-react/walletconnect-connector'),
     poolABI = require('./contracts/pool-abi'),
@@ -98,10 +99,35 @@ const stateVars = {
 }
 
 
+const actions = {
+    deposit: async (amount, web3) => {
+        const
+            weiAmount = parseEther(amount),
+
+            approveResp =
+                await web3.contracts.token.approve(
+                    contractAddresses[web3.chainId].pool,
+                    weiAmount,
+                )
+
+        approveResp.wait()
+
+        await web3.contracts.pool.deposit(web3.account, weiAmount, web3.account)
+    },
+
+    withdraw: (amount, web3) =>
+        web3.contracts.pool.withdraw(web3.account, parseEther(amount)),
+
+    stake: (amount, web3) =>
+        web3.contracts.pool.stake(parseEther(amount)),
+}
+
+
 module.exports = {
     connectorFactories,
     availableServices: keys(connectorFactories),
     contractAddresses,
     contractFactories,
     stateVars,
+    actions,
 }
