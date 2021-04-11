@@ -32,14 +32,16 @@ const state = {
 
 
 const activateWeb3 = async (serviceName, web3Ctx) => {
+    const connector = connectorFactories[serviceName]()
+
+    await web3Ctx.activate(connector, null, true)
+    web3Events.emit('activate', {serviceName})
+
     const
-        connector = connectorFactories[serviceName](),
         initialAccount = await connector.getAccount(),
         initialProvider = await connector.getProvider(),
         initialChainId = Number(await connector.getChainId())
 
-    await web3Ctx.activate(connector, null, true)
-    web3Events.emit('activate', {serviceName})
 
     const handleAccountOrChainChange = async ({account, chainId, provider}) => {
         web3Ctx.update(mapValues(stateVars, conf => conf.initial))
