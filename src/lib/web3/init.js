@@ -12,8 +12,10 @@ const web3Events = new EventEmitter()
 web3Events.on('activate', ({serviceName}) =>
     localStorage.setItem('lastWeb3Service', serviceName))
 
-web3Events.on('deactivate', () =>
-    localStorage.removeItem('lastWeb3Service'))
+web3Events.on('deactivate', () => {
+    localStorage.removeItem('lastWeb3Service')
+    state.provider.removeAllListeners()
+})
 
 
 const initWeb3 = web3Ctx => {
