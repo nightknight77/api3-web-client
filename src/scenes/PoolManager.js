@@ -1,23 +1,28 @@
 const
     {createElement, useState} = require('react'),
+    {parseEther} = require('@ethersproject/units'),
     {useWeb3, contractAddresses} = require('lib/web3'),
     {fmtApi3} = require('lib/util'),
     {Card} = require('lib/ui')
 
 
 const deposit = async (amount, web3) => {
-    const approveResp =
-        await web3.contracts.token.approve(
-            contractAddresses[web3.chainId].pool,
-            amount,
-        )
+    const
+        weiAmount = parseEther(amount),
+
+        approveResp =
+            await web3.contracts.token.approve(
+                contractAddresses[web3.chainId].pool,
+                weiAmount,
+            )
 
     approveResp.wait()
 
-    await web3.contracts.pool.deposit(web3.account, amount, web3.account)
+    await web3.contracts.pool.deposit(web3.account, weiAmount, web3.account)
 }
 
-const stake = (amount, web3) => web3.contracts.pool.stake(amount)
+const stake = (amount, web3) =>
+    web3.contracts.pool.stake(parseEther(amount))
 
 
 const PoolManager = () => {
