@@ -16,7 +16,14 @@ const promiseAllObj = async promiseDict => {
 const fmtApi3 = amount => commify(formatEther(amount))
 
 
+const abbr = (text, numLeftChars = 3, numRightChars = 3, filler = '...') =>
+    text.slice(0, numLeftChars) +
+    filler +
+    (numRightChars <= 0 ? '' : text.slice(numRightChars * -1))
+
+
 module.exports = {
     promiseAllObj,
     fmtApi3,
+    abbr,
 }

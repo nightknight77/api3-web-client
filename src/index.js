@@ -2,7 +2,8 @@ const
     {createElement, useEffect} = require('react'),
     ReactDOM = require('react-dom'),
     {Web3Provider, useWeb3, initWeb3} = require('./lib/web3'),
-    {Landing} = require('./scenes')
+    {Landing} = require('./scenes'),
+    _ = require('./global.css')
 
 
 const boot = () => {
