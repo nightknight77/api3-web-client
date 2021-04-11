@@ -5,23 +5,47 @@ const
     {WalletConnectConnector} = require('@web3-react/walletconnect-connector'),
     poolABI = require('./contracts/pool-abi'),
     tokenABI = require('./contracts/token-abi'),
-    {DEVCHAIN_ID, DEVCHAIN_URL,
-        POOL_CONTRACT_ADDR, TOKEN_CONTRACT_ADDR} = process.env,
+    {MAINNET_URL, RINKEBY_URL, DEVCHAIN_URL, DEVCHAIN_ID} = process.env,
     {keys} = Object
 
 
 const connectorFactories = {
     MetaMask: () =>
-        new InjectedConnector({supportedChainIds: [Number(DEVCHAIN_ID)]}),
+        new InjectedConnector({supportedChainIds: [1, 4, Number(DEVCHAIN_ID)]}),
 
     WalletConnect: () =>
-        new WalletConnectConnector({rpc: {[DEVCHAIN_ID]: DEVCHAIN_URL}}),
+        new WalletConnectConnector({
+            rpc: {
+                1: MAINNET_URL,
+                4: RINKEBY_URL,
+                [DEVCHAIN_ID]: DEVCHAIN_URL,
+            },
+        }),
+}
+
+
+const contractAddresses = {
+    1: {
+        pool: process.env.POOL_CONTRACT_ADDR_MAINNET,
+        token: process.env.TOKEN_CONTRACT_ADDR_MAINNET,
+    },
+    4: {
+        pool: process.env.POOL_CONTRACT_ADDR_RINKEBY,
+        token: process.env.TOKEN_CONTRACT_ADDR_RINKEBY,
+    },
+    [DEVCHAIN_ID]: {
+        pool: process.env.POOL_CONTRACT_ADDR_DEV,
+        token: process.env.TOKEN_CONTRACT_ADDR_DEV,
+    },
 }
 
 
 const contractFactories = {
-    pool: signer => new Contract(POOL_CONTRACT_ADDR, poolABI, signer),
-    token: signer => new Contract(TOKEN_CONTRACT_ADDR, tokenABI, signer),
+    pool: (chainId, signer) =>
+        new Contract(contractAddresses[chainId].pool, poolABI, signer),
+
+    token: (chainId, signer) =>
+        new Contract(contractAddresses[chainId].token, tokenABI, signer),
 }
 
 

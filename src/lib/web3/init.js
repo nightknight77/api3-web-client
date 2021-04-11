@@ -36,7 +36,8 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
     const
         connector = connectorFactories[serviceName](),
         initialAccount = await connector.getAccount(),
-        initialProvider = new Web3Provider(await connector.getProvider())
+        initialProvider = new Web3Provider(await connector.getProvider()),
+        initialChainId = Number(await connector.getChainId())
 
     await web3Ctx.activate(connector, null, true)
     web3Events.emit('activate', {serviceName})
@@ -60,7 +61,7 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
             ))
     }
 
-    connector.on('Web3ReactUpdate', async ({account, provider}) => {
+    connector.on('Web3ReactUpdate', async ({account, chainId, provider}) => {
         web3Ctx.update(initialWeb3AccountValue)
 
         if (account) {
@@ -76,7 +77,8 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
 
             state.provider = provider
             state.contracts =
-                mapValues(contractFactories, cFactory => cFactory(signer))
+                mapValues(
+                    contractFactories, cFactory => cFactory(chainId, signer))
 
             web3Ctx.update({contracts: state.contracts})
 
@@ -94,6 +96,7 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
     connector.emit('Web3ReactUpdate', {
         account: initialAccount,
         provider: initialProvider,
+        chainId: initialChainId,
     })
 }
 
