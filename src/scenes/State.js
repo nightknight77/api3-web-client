@@ -11,8 +11,8 @@ const State = () => {
         style={{
             borderSpacing: '5px 15px',
         }}
-    ><tbody
-        children={[
+    >
+        <tbody children={[
             ['Balance', web3.api3Balance],
             ['Deposited', web3.depositAmount],
             ['Staked', web3.stakeAmount],
@@ -30,8 +30,8 @@ const State = () => {
                     />
                 </tr>,
             )
-        }
-    /></table>
+        } />
+    </table>
 }
 
 

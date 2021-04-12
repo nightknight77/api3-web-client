@@ -27,31 +27,31 @@ const Landing = () => {
             .filter(Boolean)
 
     return <>
-    <h1 style={{textAlign: 'center'}}>
-        <img src={logoImg} />
-    </h1>
+        <h1 style={{textAlign: 'center'}}>
+            <img src={logoImg} />
+        </h1>
 
-    <div
-        style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-        }}
-        children={finalComponents.map(c =>
-            <Card
-                key={c.name}
-                style={{
-                    flex: '0 0 250px',
-                    height: 200,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-                children={<div children={createElement(c)} />}
-            />
-        )}
-    />
+        <div
+            style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}
+            children={finalComponents.map(c =>
+                <Card
+                    key={c.name}
+                    style={{
+                        flex: '0 0 250px',
+                        height: 200,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                    children={<div children={createElement(c)} />}
+                />,
+            )}
+        />
     </>
 }
 
