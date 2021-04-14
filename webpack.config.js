@@ -89,7 +89,7 @@ module.exports = {
                     {loader: 'css-loader', options: {
                         modules: {
                             // generate helpful class names:
-                            localIdentName: '[local]--[fullhash:base64:10]',
+                            localIdentName: '[local]--[hash:base64:10]',
                         },
                     }},
                 ],
