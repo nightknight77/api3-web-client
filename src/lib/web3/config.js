@@ -60,7 +60,7 @@ const stateVars = {
     stakeAmount: {
         initial: BigNumber.from(0),
 
-        updater: ({contracts, account}) => contracts.pool.balanceOf(account),
+        updater: ({contracts, account}) => contracts.pool.userStake(account),
     },
 
     depositAmount: {
