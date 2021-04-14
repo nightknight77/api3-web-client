@@ -90,10 +90,38 @@ const stateVars = {
                     withdrawEvents.reduce(
                         (sum, e) => e.args.amount.add(sum),
                         BigNumber.from(0),
+                    ),
+
+                stakeEvents =
+                    await contracts.pool.queryFilter(
+                        contracts.pool.filters.Staked(account),
+                        fromBlock,
+                    ),
+
+                newStakeAmount =
+                    stakeEvents.reduce(
+                        (sum, e) => e.args.amount.add(sum),
+                        BigNumber.from(0),
+                    ),
+
+                unstakeEvents =
+                    await contracts.pool.queryFilter(
+                        contracts.pool.filters.Unstaked(account),
+                        fromBlock,
+                    ),
+
+                newUnstakeAmount =
+                    unstakeEvents.reduce(
+                        (sum, e) => e.args.amount.add(sum),
+                        BigNumber.from(0),
                     )
 
             return prevAmount =>
-                prevAmount.add(newDepositAmount).sub(newWithdrawAmount)
+                prevAmount
+                    .add(newDepositAmount)
+                    .add(newUnstakeAmount)
+                    .sub(newWithdrawAmount)
+                    .sub(newStakeAmount)
         },
     },
 }
