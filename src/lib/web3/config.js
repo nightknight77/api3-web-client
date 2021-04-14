@@ -4,10 +4,11 @@ const
     {parseEther} = require('@ethersproject/units'),
     {InjectedConnector} = require('@web3-react/injected-connector'),
     {WalletConnectConnector} = require('@web3-react/walletconnect-connector'),
+    {flatten} = require('lodash-es'),
     poolABI = require('./contracts/pool-abi'),
     tokenABI = require('./contracts/token-abi'),
     {MAINNET_URL, RINKEBY_URL, DEVCHAIN_URL, DEVCHAIN_ID} = process.env,
-    {keys} = Object
+    {keys, values} = Object
 
 
 const connectorFactories = {
@@ -68,60 +69,30 @@ const stateVars = {
 
         updater: async ({contracts, account, fromBlock}) => {
             const
-                depositEvents =
-                    await contracts.pool.queryFilter(
-                        contracts.pool.filters.Deposited(account),
-                        fromBlock,
-                    ),
+                f = contracts.pool.filters,
 
-                newDepositAmount =
-                    depositEvents.reduce(
-                        (sum, e) => e.args.amount.add(sum),
-                        BigNumber.from(0),
-                    ),
+                spec = {
+                    Deposited: {op: 'add', filter: f.Deposited(account)},
+                    Withdrawn: {op: 'sub', filter: f.Withdrawn(null, account)},
+                    Staked:    {op: 'sub', filter: f.Staked(account)},
+                    Unstaked:  {op: 'add', filter: f.Unstaked(account)},
+                },
 
-                withdrawEvents =
-                    await contracts.pool.queryFilter(
-                        contracts.pool.filters.Withdrawn(null, account),
-                        fromBlock,
-                    ),
+                eventGroups = await Promise.all(
+                    values(spec)
+                        .map(({filter}) =>
+                            contracts.pool.queryFilter(filter, fromBlock)),
+                ),
 
-                newWithdrawAmount =
-                    withdrawEvents.reduce(
-                        (sum, e) => e.args.amount.add(sum),
-                        BigNumber.from(0),
-                    ),
+                events = flatten(eventGroups),
 
-                stakeEvents =
-                    await contracts.pool.queryFilter(
-                        contracts.pool.filters.Staked(account),
-                        fromBlock,
-                    ),
-
-                newStakeAmount =
-                    stakeEvents.reduce(
-                        (sum, e) => e.args.amount.add(sum),
-                        BigNumber.from(0),
-                    ),
-
-                unstakeEvents =
-                    await contracts.pool.queryFilter(
-                        contracts.pool.filters.Unstaked(account),
-                        fromBlock,
-                    ),
-
-                newUnstakeAmount =
-                    unstakeEvents.reduce(
-                        (sum, e) => e.args.amount.add(sum),
+                updateAmount =
+                    events.reduce(
+                        (sum, e) => sum[spec[e.event].op](e.args.amount),
                         BigNumber.from(0),
                     )
 
-            return prevAmount =>
-                prevAmount
-                    .add(newDepositAmount)
-                    .add(newUnstakeAmount)
-                    .sub(newWithdrawAmount)
-                    .sub(newStakeAmount)
+            return prevAmount => prevAmount.add(updateAmount)
         },
     },
 }
