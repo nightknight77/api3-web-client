@@ -1,52 +1,61 @@
 const
-    {createElement, Fragment, useState} = require('react'),
+    {createElement, useState} = require('react'),
+    {capitalize} = require('lodash-es'),
     {useWeb3, actions: {deposit, withdraw, stake}} = require('lib/web3'),
+    {useModal} = require('lib/modal'),
     {Input, Button} = require('lib/ui')
 
 
 const Actions = () => {
     const
         web3 = useWeb3(),
-        [depositAmount, setDepositAmount] = useState(''),
-        [stakeAmount, setStakeAmount] = useState('')
+        modal = useModal()
 
-    return <>
+    return [
+        ['deposit', '+', deposit],
+        ['withdraw', '-', withdraw],
+        ['stake', '+', stake],
+    ].map((
+        [opName, opSymbol, opAction],
+    ) =>
+        <Button
+            key={opName}
+            prefix={opSymbol}
+            children={capitalize(opName)}
+            onClick={() =>
+                modal.open(TransferForm, {
+                    intent: opName,
+                    onSubmit: val => opAction(val, web3),
+                })
+            }
+        />,
+    )
+}
+
+
+const TransferForm = ({intent, onSubmit}) => {
+    const [value, setValue] = useState('')
+
+    return <div style={{textAlign: 'center'}}>
+        <p>How many tokens would you like to {intent}?</p>
+
         <p>
             <Input
                 type='number'
-                value={depositAmount}
-                placeholder='0'
-                onChange={e => setDepositAmount(e.target.value)}
-            />
-
-            <Button
-                prefix='+'
-                children='Deposit'
-                onClick={() => deposit(depositAmount, web3)}
-            />
-
-            <Button
-                prefix='-'
-                children='Withdraw'
-                onClick={() => withdraw(depositAmount, web3)}
+                value={value}
+                placeholder='00'
+                size='lg'
+                onChange={e => setValue(e.target.value)}
             />
         </p>
 
         <p>
-            <Input
-                type='number'
-                value={stakeAmount}
-                placeholder='0'
-                onChange={e => setStakeAmount(e.target.value)}
-            />
-
             <Button
-                prefix='+'
-                children='Stake'
-                onClick={() => stake(stakeAmount, web3)}
+                children={capitalize(intent)}
+                onClick={() => onSubmit(value)}
             />
         </p>
-    </>
+    </div>
 }
 
 
