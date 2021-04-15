@@ -1,0 +1,8 @@
+.card {
+    border: 1px solid #777;
+    margin: 20px;
+    padding: 20px;
+}
+.card h2 {
+    margin-top: 0;
+}
