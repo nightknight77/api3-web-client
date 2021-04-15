@@ -24,6 +24,7 @@ const sections = (web3, modal) => [
             action: () => modal.open(TransferForm, {
                 intent: 'deposit',
                 onSubmit: val => deposit(val, web3).then(modal.close),
+                children: `(Undeposited: ${web3.api3Balance})`,
             }),
         },
         cta2: {
