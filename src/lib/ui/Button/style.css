@@ -1,0 +1,11 @@
+.button {
+    margin: 5px;
+    padding: 10px;
+    background-color: transparent;
+    color: #777;
+    border: 1px solid #777;
+    cursor: pointer;
+}
+.button .prefix {
+    margin-right: 5px;
+}
