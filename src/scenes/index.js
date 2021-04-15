@@ -1,7 +1,7 @@
 module.exports = {
     Landing: require('./Landing'),
     WalletManager: require('./WalletManager'),
-    State: require('./State'),
-    Actions: require('./Actions'),
+    Balance: require('./Balance'),
+    Staking: require('./Staking'),
     Faucet: require('./Faucet'),
 }

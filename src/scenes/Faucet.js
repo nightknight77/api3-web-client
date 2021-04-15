@@ -11,8 +11,6 @@ const Faucet = () => {
     return <div style={{
         textAlign: 'center',
     }}>
-        <h3 children='Rinkeby API3 Faucet' />
-
         <Button
             children='Get some tokens'
             onClick={() => window.open(RINKEBY_FAUCET_URL + '/' + web3.account)}

@@ -1,30 +1,63 @@
 const
-    {createElement, Fragment} = require('react'),
-
-    {useWeb3} = require('lib/web3'),
-
-    {Card} = require('lib/ui'),
-
-    components = [
-        require('./WalletManager'),
-        require('./State'),
-        require('./Actions'),
-    ],
-
-    Faucet = require('./Faucet'),
-
+    {createElement, Fragment, useState} = require('react'),
+    {capitalize} = require('lodash-es'),
+    {useWeb3, actions: {deposit, withdraw, stake}} = require('lib/web3'),
+    {useModal} = require('lib/modal'),
+    {Card, Input, Button} = require('lib/ui'),
     logoImg = require('./logo.svg').default
+
+
+const sections = (web3, modal) => [
+    {
+        title: 'Wallet',
+        component: require('./WalletManager'),
+        cta1: web3.active && {
+            title: 'Disconnect',
+            action: web3.deactivate,
+        },
+    },
+    {
+        title: 'Balance',
+        component: require('./Balance'),
+        cta1: {
+            title: 'Deposit',
+            action: () => modal.open(TransferForm, {
+                intent: 'deposit',
+                onSubmit: val => deposit(val, web3).then(modal.close),
+            }),
+        },
+        cta2: {
+            title: 'Withdraw',
+            action: () => modal.open(TransferForm, {
+                intent: 'withdraw',
+                onSubmit: val => withdraw(val, web3).then(modal.close),
+            }),
+        },
+    },
+    {
+        title: 'Staking',
+        component: require('./Staking'),
+        cta1: {
+            title: 'Stake',
+            action: () => modal.open(TransferForm, {
+                intent: 'stake',
+                onSubmit: val => stake(val, web3).then(modal.close),
+            }),
+        },
+    },
+    web3.chainId === 4 && {
+        title: 'Faucet',
+        component: require('./Faucet'),
+    },
+]
+    .filter(Boolean)
 
 
 const Landing = () => {
     const
         web3 = useWeb3(),
-
-        finalComponents = [
-            ...components,
-            web3.chainId === 4 && Faucet,
-        ]
-            .filter(Boolean)
+        modal = useModal(),
+        sections_ = sections(web3, modal)
 
     return <>
         <h1 style={{textAlign: 'center'}}>
@@ -38,9 +71,12 @@ const Landing = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
             }}
-            children={finalComponents.map(c =>
+            children={sections_.map(({title, component, cta1, cta2}) =>
                 <Card
-                    key={c.name}
+                    key={component.name}
+                    title={title}
+                    cta1={cta1}
+                    cta2={cta2}
                     style={{
                         flex: '0 0 250px',
                         height: 200,
@@ -48,11 +84,37 @@ const Landing = () => {
                         justifyContent: 'center',
                         alignItems: 'center',
                     }}
-                    children={<div children={createElement(c)} />}
+                    children={<div children={createElement(component)} />}
                 />,
             )}
         />
     </>
+}
+
+
+const TransferForm = ({intent, onSubmit}) => {
+    const [value, setValue] = useState('')
+
+    return <div style={{textAlign: 'center'}}>
+        <p>How many tokens would you like to {intent}?</p>
+
+        <p>
+            <Input
+                type='number'
+                value={value}
+                placeholder='00'
+                size='lg'
+                onChange={e => setValue(e.target.value)}
+            />
+        </p>
+
+        <p>
+            <Button
+                children={capitalize(intent)}
+                onClick={() => onSubmit(value)}
+            />
+        </p>
+    </div>
 }
 
 
