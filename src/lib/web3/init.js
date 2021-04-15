@@ -76,6 +76,8 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
 
 
     const handleAccountOrChainChange = async ({account, chainId, provider}) => {
+        web3Ctx.update(mapValues(stateVars, () => undefined))
+
         if (account) {
             state.account = account
 
