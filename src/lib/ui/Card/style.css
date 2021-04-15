@@ -1,8 +1,31 @@
 .card {
-    border: 1px solid #777;
+    position: relative;
+    border-color: #777;
+    border-style: solid;
+    border-width: 1px;
     margin: 20px;
     padding: 20px;
 }
-.card h2 {
-    margin-top: 0;
+.card header,
+.card footer {
+    position: absolute;
+    width: calc(100% - 60px);
+    height: 40px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    background-color: black;
+}
+.card header {
+    top: -20px;
+    justify-content: space-between;
+}
+.card footer {
+    bottom: -20px;
+    justify-content: center;
+}
+.card footer .button {
+    color: #7ce3cb;
+    border-width: 0;
+    text-decoration: underline;
 }
