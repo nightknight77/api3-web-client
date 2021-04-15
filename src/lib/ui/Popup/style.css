@@ -1,0 +1,23 @@
+.popup {
+    border: 1px solid #aaa;
+    padding: 20px;
+    background-color: black;
+}
+
+.popup header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.popup header button {
+    margin-left: 20px;
+    border-style: none;
+    padding: 0;
+    color: white;
+    background-color: transparent;
+    cursor: pointer;
+}
+.popup header button:focus {
+    outline: none;
+}

@@ -2,6 +2,7 @@ const
     {createElement, useEffect} = require('react'),
     ReactDOM = require('react-dom'),
     {Web3Provider, useWeb3, initWeb3} = require('./lib/web3'),
+    {ModalProvider} = require('./lib/modal'),
     {Landing} = require('./scenes')
 
 require('./global.css')
@@ -17,8 +18,9 @@ const boot = () => {
 
 const App = () =>
     <Web3Provider children={
-        <AppInitializer children={
-            <Landing />} />} />
+        <ModalProvider children={
+            <AppInitializer children={
+                <Landing />} />} />} />
 
 
 const AppInitializer = ({children}) => {
