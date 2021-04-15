@@ -52,48 +52,45 @@ const contractFactories = {
 
 
 const stateVars = {
-    api3Balance: {
-        initial: BigNumber.from(0),
+    api3Balance: ({contracts, account}) =>
+        account
+            ? contracts.token.balanceOf(account)
+            : BigNumber.from(0),
 
-        updater: ({contracts, account}) => contracts.token.balanceOf(account),
-    },
+    stakeAmount: ({contracts, account}) =>
+        account
+            ? contracts.pool.userStake(account)
+            : BigNumber.from(0),
 
-    stakeAmount: {
-        initial: BigNumber.from(0),
+    depositAmount: async ({contracts, account, fromBlock}) => {
+        if (!account)
+            return BigNumber.from(0)
 
-        updater: ({contracts, account}) => contracts.pool.userStake(account),
-    },
+        const
+            f = contracts.pool.filters,
 
-    depositAmount: {
-        initial: BigNumber.from(0),
+            spec = {
+                Deposited: {op: 'add', filter: f.Deposited(account)},
+                Withdrawn: {op: 'sub', filter: f.Withdrawn(null, account)},
+                Staked:    {op: 'sub', filter: f.Staked(account)},
+                Unstaked:  {op: 'add', filter: f.Unstaked(account)},
+            },
 
-        updater: async ({contracts, account, fromBlock}) => {
-            const
-                f = contracts.pool.filters,
+            eventGroups = await Promise.all(
+                values(spec)
+                    .map(({filter}) =>
+                        contracts.pool.queryFilter(filter, fromBlock)),
+            ),
 
-                spec = {
-                    Deposited: {op: 'add', filter: f.Deposited(account)},
-                    Withdrawn: {op: 'sub', filter: f.Withdrawn(null, account)},
-                    Staked:    {op: 'sub', filter: f.Staked(account)},
-                    Unstaked:  {op: 'add', filter: f.Unstaked(account)},
-                },
+            events = flatten(eventGroups),
 
-                eventGroups = await Promise.all(
-                    values(spec)
-                        .map(({filter}) =>
-                            contracts.pool.queryFilter(filter, fromBlock)),
-                ),
+            updateAmount =
+                events.reduce(
+                    (sum, e) => sum[spec[e.event].op](e.args.amount),
+                    BigNumber.from(0),
+                )
 
-                events = flatten(eventGroups),
-
-                updateAmount =
-                    events.reduce(
-                        (sum, e) => sum[spec[e.event].op](e.args.amount),
-                        BigNumber.from(0),
-                    )
-
-            return prevAmount => prevAmount.add(updateAmount)
-        },
+        return (prevAmount = BigNumber.from(0)) => prevAmount.add(updateAmount)
     },
 }
 

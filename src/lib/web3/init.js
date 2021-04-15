@@ -3,22 +3,38 @@ const
     {Web3Provider} = require('@ethersproject/providers'),
     {promiseAllObj} = require('lib/util'),
     {connectorFactories, contractFactories, stateVars} = require('./config'),
-    {mapValues, debounce} = require('lodash-es')
+    {mapValues, debounce} = require('lodash-es'),
+    {assign} = Object
+
+
+const
+    initialState = {
+        account: null,
+        provider: null,
+        contracts: null,
+        blockNo: 0,
+    },
+
+    state = assign({}, initialState),
+
+    resetState = () => assign(state, initialState)
 
 
 const web3Events = new EventEmitter()
 
 
-web3Events.on('activate', ({serviceName}) =>
-    localStorage.setItem('lastWeb3Service', serviceName))
-
-web3Events.on('deactivate', () => {
-    localStorage.removeItem('lastWeb3Service')
-    state.provider.removeAllListeners()
-})
-
-
 const initWeb3 = web3Ctx => {
+    web3Events
+        .on('activate', ({serviceName}) =>
+            localStorage.setItem('lastWeb3Service', serviceName))
+
+        .on('deactivate', () => {
+            localStorage.removeItem('lastWeb3Service')
+            state.provider.removeAllListeners()
+            resetState()
+            updateWeb3Numbers(state.blockNo, web3Ctx)
+        })
+
     const lastWeb3Service = localStorage.getItem('lastWeb3Service')
 
     if (lastWeb3Service)
@@ -26,10 +42,24 @@ const initWeb3 = web3Ctx => {
 }
 
 
-const state = {
-    account: null,
-    provider: null,
-    contracts: null,
+const updateWeb3Numbers = async (fromBlock, web3Ctx) => {
+    const setters =
+        await promiseAllObj(
+            mapValues(stateVars, getter =>
+                getter({
+                    fromBlock,
+                    account: state.account,
+                    provider: state.provider,
+                    contracts: state.contracts,
+                })))
+
+    web3Ctx.update(prevState =>
+        mapValues(setters, (s, propName) =>
+            typeof s === 'function'
+                ? s(prevState[propName])
+                : s,
+        ),
+    )
 }
 
 
@@ -46,13 +76,11 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
 
 
     const handleAccountOrChainChange = async ({account, chainId, provider}) => {
-        web3Ctx.update(mapValues(stateVars, conf => conf.initial))
-
         if (account) {
             state.account = account
 
             if (!provider)
-                updateWeb3Numbers(0)
+                updateWeb3Numbers(0, web3Ctx)
         }
 
         if (provider) {
@@ -71,39 +99,20 @@ const activateWeb3 = async (serviceName, web3Ctx) => {
             web3Ctx.update({contracts: state.contracts})
 
             ethersProvider.on('block', blockNo => {
+                state.blockNo = blockNo
+
                 if (handledFirstEvent)
-                    updateWeb3Numbers(blockNo)
+                    updateWeb3Numbers(blockNo, web3Ctx)
                 else {
-                    updateWeb3Numbers(0)
+                    updateWeb3Numbers(0, web3Ctx)
                     handledFirstEvent = true
                 }
             })
         }
     }
 
-    const updateWeb3Numbers = async fromBlock => {
-        const setters =
-            await promiseAllObj(
-                mapValues(stateVars, conf =>
-                    conf.updater({
-                        fromBlock,
-                        account: state.account,
-                        provider: state.provider,
-                        contracts: state.contracts,
-                    })))
-
-        web3Ctx.update(prevState =>
-            mapValues(setters, (s, propName) =>
-                typeof s === 'function'
-                    ? s(prevState[propName])
-                    : s,
-            ),
-        )
-    }
-
     connector
         .on('Web3ReactUpdate', debounce(handleAccountOrChainChange, 50))
-
         .on('Web3ReactDeactivate', web3Ctx.deactivate)
 
     connector.emit('Web3ReactUpdate', {

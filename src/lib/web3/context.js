@@ -9,7 +9,7 @@ const
 
 const initialWeb3AccountValue = {
     contracts: {},
-    ...mapValues(stateVars, conf => conf.initial),
+    ...mapValues(stateVars, () => undefined),
 }
 
 
@@ -55,7 +55,6 @@ const useWeb3 = () => {
 
         deactivate: async () => {
             await web3React.deactivate()
-            web3Account.update(initialWeb3AccountValue)
             web3Events.emit('deactivate')
         },
     }
