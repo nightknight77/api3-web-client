@@ -4,6 +4,7 @@ const
     {useWeb3, actions: {deposit, withdraw, stake}} = require('lib/web3'),
     {useModal} = require('lib/modal'),
     {Card, Input, Button} = require('lib/ui'),
+    {fmtApi3} = require('lib/util'),
     logoImg = require('./logo.svg').default
 
 
@@ -24,7 +25,7 @@ const sections = (web3, modal) => [
             action: () => modal.open(TransferForm, {
                 intent: 'deposit',
                 onSubmit: val => deposit(val, web3).then(modal.close),
-                children: `(Undeposited: ${web3.api3Balance})`,
+                children: `(Undeposited: ${fmtApi3(web3.api3Balance)})`,
             }),
         },
         cta2: {
