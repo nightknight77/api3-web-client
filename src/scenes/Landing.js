@@ -92,11 +92,13 @@ const Landing = () => {
 }
 
 
-const TransferForm = ({intent, onSubmit}) => {
+const TransferForm = ({intent, children, onSubmit}) => {
     const [value, setValue] = useState('')
 
     return <div style={{textAlign: 'center'}}>
         <p>How many tokens would you like to {intent}?</p>
+
+        {children && <p children={children} />}
 
         <p>
             <Input
