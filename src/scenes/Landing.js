@@ -1,6 +1,6 @@
 import React, {createElement, useState} from 'react'
 import {capitalize} from 'lodash-es'
-import {useWeb3, actions} from 'lib/web3'
+import {useWeb3, actions, allowanceRefillThreshold} from 'lib/web3'
 import {useModal} from 'lib/modal'
 import {Card, Input, Button} from 'lib/ui'
 import {fmtApi3} from 'lib/util'
@@ -10,7 +10,7 @@ import Staking from './Staking'
 import Faucet from './Faucet'
 import logoImg from './logo.svg'
 
-const {deposit, withdraw, stake} = actions
+const {deposit, withdraw, stake, grantInfiniteAllowanceToPool} = actions
 
 
 const sections = (web3, modal) => [
@@ -25,7 +25,10 @@ const sections = (web3, modal) => [
     {
         title: 'Balance',
         component: Balance,
-        cta1: {
+        cta1: (web3.poolAllowance && web3.poolAllowance.lt(allowanceRefillThreshold)) ? {
+            title: 'Approve',
+            action: () => grantInfiniteAllowanceToPool(web3),
+        } : {
             title: 'Deposit',
             action: () => modal.open(TransferForm, {
                 intent: 'deposit',

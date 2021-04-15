@@ -60,6 +60,11 @@ export const stateVars = {
             ? contracts.token.balanceOf(account)
             : BigNumber.from(0),
 
+    poolAllowance: ({contracts, account}) =>
+        account
+            ? contracts.token.allowance(account, contracts.pool.address)
+            : BigNumber.from(0),
+
     stakeAmount: ({contracts, account}) =>
         account
             ? contracts.pool.userStake(account)
@@ -98,20 +103,25 @@ export const stateVars = {
 }
 
 
+const maxAllowance = BigNumber.from(2).pow(256).sub(1)
+
+export const allowanceRefillThreshold = maxAllowance.div(2)
+
+
 export const actions = {
-    deposit: async (amount, web3) => {
-        const
-            weiAmount = parseEther(amount),
+    deposit: (amount, web3) =>
+        web3.contracts.pool.deposit(
+            web3.account,
+            parseEther(amount),
+            web3.account,
+        ),
 
-            approveResp =
-                await web3.contracts.token.approve(
-                    contractAddresses[web3.chainId].pool,
-                    weiAmount,
-                )
+    grantInfiniteAllowanceToPool: async web3 => {
+        const poolAddr = web3.contracts.pool.address
 
-        approveResp.wait()
+        await (await web3.contracts.token.approve(poolAddr, 0)).wait()
 
-        await web3.contracts.pool.deposit(web3.account, weiAmount, web3.account)
+        return await web3.contracts.token.approve(poolAddr, maxAllowance)
     },
 
     withdraw: (amount, web3) =>
