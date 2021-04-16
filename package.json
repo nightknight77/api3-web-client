@@ -4,7 +4,8 @@
     "start": "NODE_ENV=development webpack serve",
     "build": "NODE_ENV=production webpack",
     "lint": "eslint src",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "deploy": "cd public && scp -C index.html *.js *.css *.svg api3-wc:"
   },
   "sideEffects": [
     "src/global.css"
