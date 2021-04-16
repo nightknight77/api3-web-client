@@ -4,10 +4,10 @@
 
       cp .env.example .env
       vim .env  # fill in the blanks
-      npm i
+      yarn install
 
-- Run dev server: `npm start`
+- Run dev server: `yarn start`
 
-- Lint: `npm run lint`
+- Lint: `yarn lint`
 
-- Make a production build: `npm run build`
+- Make a production build: `yarn build`
