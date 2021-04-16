@@ -1,4 +1,4 @@
-import {createElement} from 'react'
+import React from 'react'
 import Button from '../Button'
 import s from './style.css'
 

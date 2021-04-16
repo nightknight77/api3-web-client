@@ -1,4 +1,4 @@
-import {createElement} from 'react'
+import React from 'react'
 import {availableServices, activateWeb3, useWeb3} from 'lib/web3'
 import {Button} from 'lib/ui'
 import {abbr} from 'lib/util'

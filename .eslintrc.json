@@ -38,8 +38,7 @@
     },
     "settings": {
       "react": {
-        "version": "detect",
-        "pragma": "createElement"
+        "version": "detect"
       }
     }
 }

@@ -1,4 +1,4 @@
-import {createElement} from 'react'
+import React from 'react'
 
 
 const Input = ({type, style: extraStyles, size = 'md', ...props}) =>

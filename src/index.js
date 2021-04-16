@@ -1,4 +1,4 @@
-import {createElement, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import ReactDOM from 'react-dom'
 import {Web3Provider, useWeb3, initWeb3} from './lib/web3'
 import {ModalProvider} from './lib/modal'

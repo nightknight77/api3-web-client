@@ -1,4 +1,4 @@
-import {createElement, Fragment, useState} from 'react'
+import React, {createElement, useState} from 'react'
 import {capitalize} from 'lodash-es'
 import {useWeb3, actions} from 'lib/web3'
 import {useModal} from 'lib/modal'

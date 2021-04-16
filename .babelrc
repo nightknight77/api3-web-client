@@ -8,9 +8,6 @@
         "corejs": 3
     }],
 
-    ["@babel/preset-react", {
-      pragma: "createElement",
-      pragmaFrag: "Fragment"
-    }]
+    "@babel/preset-react"
   ]
 }
