@@ -1,9 +1,11 @@
-import {Web3Provider} from '@ethersproject/providers'
+import {providers} from 'ethers'
 import {promiseAllObj} from 'lib/util'
 import {connectorFactories, contractFactories, stateVars} from './config'
 import {mapValues, debounce} from 'lodash-es'
 
-const {assign} = Object
+const
+    {Web3Provider} = providers,
+    {assign} = Object
 
 
 const

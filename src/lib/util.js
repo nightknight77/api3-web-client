@@ -1,6 +1,8 @@
-import {formatEther, commify} from '@ethersproject/units'
+import {utils} from 'ethers'
 
-const {keys, values, fromEntries} = Object
+const
+    {formatEther, commify} = utils,
+    {keys, values, fromEntries} = Object
 
 
 export const promiseAllObj = async promiseDict => {

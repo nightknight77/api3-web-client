@@ -1,6 +1,4 @@
-import {Contract} from '@ethersproject/contracts'
-import {BigNumber} from '@ethersproject/bignumber'
-import {parseEther} from '@ethersproject/units'
+import {Contract, BigNumber, utils} from 'ethers'
 import {InjectedConnector} from '@web3-react/injected-connector'
 import {WalletConnectConnector} from '@web3-react/walletconnect-connector'
 import {flatten} from 'lodash-es'
@@ -8,6 +6,7 @@ import poolABI from './contracts/pool-abi'
 import tokenABI from './contracts/token-abi'
 
 const
+    {parseEther} = utils,
     {MAINNET_URL, RINKEBY_URL, DEVCHAIN_URL, DEVCHAIN_ID} = process.env,
     {keys, values} = Object
 

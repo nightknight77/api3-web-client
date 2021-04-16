@@ -1,9 +1,11 @@
 import React, {createContext, useContext, useState} from 'react'
-import {Web3Provider as Web3EthersProvider} from '@ethersproject/providers'
+import {providers} from 'ethers'
 import {Web3ReactProvider, useWeb3React} from '@web3-react/core'
 import {mapValues} from 'lodash-es'
 import {handleWeb3Deactivate} from './init'
 import {stateVars} from './config'
+
+const {Web3Provider: Web3EthersProvider} = providers
 
 
 const initialWeb3AccountValue = {
