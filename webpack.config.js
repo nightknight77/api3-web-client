@@ -7,6 +7,7 @@ const
     MiniCSSExtractPlugin = require('mini-css-extract-plugin'),
     ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'),
     NodePolyfillPlugin = require('node-polyfill-webpack-plugin'),
+    {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer'),
     {mapValues, pick} = require('lodash')
 
 const
@@ -61,6 +62,9 @@ module.exports = {
             new MiniCSSExtractPlugin({
                 filename: '[name].[fullhash:8].css',
                 chunkFilename: '[id].[fullhash:8].css',
+            }),
+            new BundleAnalyzerPlugin({
+                analyzerMode: 'static',
             }),
         ]),
     ],
