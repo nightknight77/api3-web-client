@@ -116,13 +116,12 @@ export const actions = {
             web3.account,
         ),
 
-    grantInfiniteAllowanceToPool: async web3 => {
-        const poolAddr = web3.contracts.pool.address
-
-        await (await web3.contracts.token.approve(poolAddr, 0)).wait()
-
-        return await web3.contracts.token.approve(poolAddr, maxAllowance)
-    },
+    grantInfiniteAllowanceToPool: web3 =>
+        web3.contracts.token.approve(
+            web3.contracts.pool.address,
+            maxAllowance,
+        ),
+        // See [1]
 
     withdraw: (amount, web3) =>
         web3.contracts.pool.withdraw(web3.account, parseEther(amount)),
@@ -130,3 +129,9 @@ export const actions = {
     stake: (amount, web3) =>
         web3.contracts.pool.stake(parseEther(amount)),
 }
+
+
+// [1] We are aware of the ERC-20 approve vulnerability (See
+//     https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol#L37-L51),
+//     but not doing anything about it here as it's not really a vulnerability
+//     when we want to grant an infinite allowance.
