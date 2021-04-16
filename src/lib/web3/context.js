@@ -3,7 +3,7 @@ const
     {Web3Provider: Web3EthersProvider} = require('@ethersproject/providers'),
     {Web3ReactProvider, useWeb3React} = require('@web3-react/core'),
     {mapValues} = require('lodash-es'),
-    {web3Events} = require('./init'),
+    {handleWeb3Deactivate} = require('./init'),
     {stateVars} = require('./config')
 
 
@@ -47,15 +47,15 @@ const Web3Provider = ({children}) => {
 const useWeb3 = () => {
     const
         web3React = useWeb3React(),
-        web3Account = useContext(Web3AccountContext)
+        web3Account = useContext(Web3AccountContext),
+        web3 = {...web3React, ...web3Account}
 
     return {
-        ...web3React,
-        ...web3Account,
+        ...web3,
 
         deactivate: async () => {
             await web3React.deactivate()
-            web3Events.emit('deactivate')
+            handleWeb3Deactivate(web3)
         },
     }
 }
