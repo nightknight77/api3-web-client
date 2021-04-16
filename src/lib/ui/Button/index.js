@@ -1,6 +1,5 @@
-const
-    {createElement} = require('react'),
-    s = require('./style.css').default
+import {createElement} from 'react'
+import s from './style.css'
 
 
 const Button = ({
@@ -18,4 +17,4 @@ const Button = ({
     </button>
 
 
-module.exports = Button
+export default Button

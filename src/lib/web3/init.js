@@ -1,9 +1,9 @@
-const
-    {Web3Provider} = require('@ethersproject/providers'),
-    {promiseAllObj} = require('lib/util'),
-    {connectorFactories, contractFactories, stateVars} = require('./config'),
-    {mapValues, debounce} = require('lodash-es'),
-    {assign} = Object
+import {Web3Provider} from '@ethersproject/providers'
+import {promiseAllObj} from 'lib/util'
+import {connectorFactories, contractFactories, stateVars} from './config'
+import {mapValues, debounce} from 'lodash-es'
+
+const {assign} = Object
 
 
 const
@@ -19,19 +19,18 @@ const
     resetState = () => assign(state, initialState)
 
 
-const
-    handleWeb3Activate = serviceName =>
-        localStorage.setItem('lastWeb3Service', serviceName),
+const handleWeb3Activate = serviceName =>
+    localStorage.setItem('lastWeb3Service', serviceName)
 
-    handleWeb3Deactivate = web3Ctx => {
-        localStorage.removeItem('lastWeb3Service')
-        state.provider.removeAllListeners()
-        resetState()
-        updateWeb3Numbers(state.blockNo, web3Ctx)
-    }
+export const handleWeb3Deactivate = web3Ctx => {
+    localStorage.removeItem('lastWeb3Service')
+    state.provider.removeAllListeners()
+    resetState()
+    updateWeb3Numbers(state.blockNo, web3Ctx)
+}
 
 
-const initWeb3 = web3Ctx => {
+export const initWeb3 = web3Ctx => {
     const lastWeb3Service = localStorage.getItem('lastWeb3Service')
 
     if (lastWeb3Service)
@@ -60,7 +59,7 @@ const updateWeb3Numbers = async (fromBlock, web3Ctx) => {
 }
 
 
-const activateWeb3 = async (serviceName, web3Ctx) => {
+export const activateWeb3 = async (serviceName, web3Ctx) => {
     const con = connectorFactories[serviceName]()
 
     await web3Ctx.activate(con, null, true)
@@ -122,11 +121,4 @@ const handleAccountOrChainChange = async (
             }
         })
     }
-}
-
-
-module.exports = {
-    initWeb3,
-    activateWeb3,
-    handleWeb3Deactivate,
 }

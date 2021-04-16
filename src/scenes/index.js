@@ -1,7 +1,5 @@
-module.exports = {
-    Landing: require('./Landing'),
-    WalletManager: require('./WalletManager'),
-    Balance: require('./Balance'),
-    Staking: require('./Staking'),
-    Faucet: require('./Faucet'),
-}
+export {default as Landing} from './Landing'
+export {default as WalletManager} from './WalletManager'
+export {default as Balance} from './Balance'
+export {default as Staking} from './Staking'
+export {default as Faucet} from './Faucet'

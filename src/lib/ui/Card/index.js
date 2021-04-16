@@ -1,7 +1,6 @@
-const
-    {createElement} = require('react'),
-    Button = require('../Button'),
-    s = require('./style.css').default
+import {createElement} from 'react'
+import Button from '../Button'
+import s from './style.css'
 
 
 const Card = ({
@@ -39,4 +38,4 @@ const Card = ({
     </div>
 
 
-module.exports = Card
+export default Card

@@ -1,6 +1,4 @@
-module.exports = {
-    Card: require('./Card'),
-    Button: require('./Button'),
-    Input: require('./Input'),
-    Popup: require('./Popup'),
-}
+export {default as Card} from './Card'
+export {default as Button} from './Button'
+export {default as Input} from './Input'
+export {default as Popup} from './Popup'

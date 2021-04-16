@@ -1,10 +1,9 @@
-const
-    {createElement, createContext, useContext, useState} = require('react'),
-    {Web3Provider: Web3EthersProvider} = require('@ethersproject/providers'),
-    {Web3ReactProvider, useWeb3React} = require('@web3-react/core'),
-    {mapValues} = require('lodash-es'),
-    {handleWeb3Deactivate} = require('./init'),
-    {stateVars} = require('./config')
+import {createElement, createContext, useContext, useState} from 'react'
+import {Web3Provider as Web3EthersProvider} from '@ethersproject/providers'
+import {Web3ReactProvider, useWeb3React} from '@web3-react/core'
+import {mapValues} from 'lodash-es'
+import {handleWeb3Deactivate} from './init'
+import {stateVars} from './config'
 
 
 const initialWeb3AccountValue = {
@@ -16,7 +15,7 @@ const initialWeb3AccountValue = {
 const Web3AccountContext = createContext()
 
 
-const Web3Provider = ({children}) => {
+export const Web3Provider = ({children}) => {
     const [web3AccountState, setWeb3AccountState] =
         useState(initialWeb3AccountValue)
 
@@ -44,7 +43,7 @@ const Web3Provider = ({children}) => {
 }
 
 
-const useWeb3 = () => {
+export const useWeb3 = () => {
     const
         web3React = useWeb3React(),
         web3Account = useContext(Web3AccountContext),
@@ -58,10 +57,4 @@ const useWeb3 = () => {
             handleWeb3Deactivate(web3)
         },
     }
-}
-
-
-module.exports = {
-    Web3Provider,
-    useWeb3,
 }

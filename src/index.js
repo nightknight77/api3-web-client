@@ -1,11 +1,9 @@
-const
-    {createElement, useEffect} = require('react'),
-    ReactDOM = require('react-dom'),
-    {Web3Provider, useWeb3, initWeb3} = require('./lib/web3'),
-    {ModalProvider} = require('./lib/modal'),
-    {Landing} = require('./scenes')
-
-require('./global.css')
+import {createElement, useEffect} from 'react'
+import ReactDOM from 'react-dom'
+import {Web3Provider, useWeb3, initWeb3} from './lib/web3'
+import {ModalProvider} from './lib/modal'
+import {Landing} from './scenes'
+import './global.css'
 
 
 const boot = () => {

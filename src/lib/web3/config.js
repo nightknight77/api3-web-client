@@ -1,17 +1,18 @@
+import {Contract} from '@ethersproject/contracts'
+import {BigNumber} from '@ethersproject/bignumber'
+import {parseEther} from '@ethersproject/units'
+import {InjectedConnector} from '@web3-react/injected-connector'
+import {WalletConnectConnector} from '@web3-react/walletconnect-connector'
+import {flatten} from 'lodash-es'
+import poolABI from './contracts/pool-abi'
+import tokenABI from './contracts/token-abi'
+
 const
-    {Contract} = require('@ethersproject/contracts'),
-    {BigNumber} = require('@ethersproject/bignumber'),
-    {parseEther} = require('@ethersproject/units'),
-    {InjectedConnector} = require('@web3-react/injected-connector'),
-    {WalletConnectConnector} = require('@web3-react/walletconnect-connector'),
-    {flatten} = require('lodash-es'),
-    poolABI = require('./contracts/pool-abi'),
-    tokenABI = require('./contracts/token-abi'),
     {MAINNET_URL, RINKEBY_URL, DEVCHAIN_URL, DEVCHAIN_ID} = process.env,
     {keys, values} = Object
 
 
-const connectorFactories = {
+export const connectorFactories = {
     MetaMask: () =>
         new InjectedConnector({supportedChainIds: [1, 4, Number(DEVCHAIN_ID)]}),
 
@@ -26,7 +27,10 @@ const connectorFactories = {
 }
 
 
-const contractAddresses = {
+export const availableServices = keys(connectorFactories)
+
+
+export const contractAddresses = {
     1: {
         pool: process.env.POOL_CONTRACT_ADDR_MAINNET,
         token: process.env.TOKEN_CONTRACT_ADDR_MAINNET,
@@ -42,7 +46,7 @@ const contractAddresses = {
 }
 
 
-const contractFactories = {
+export const contractFactories = {
     pool: (chainId, signer) =>
         new Contract(contractAddresses[chainId].pool, poolABI, signer),
 
@@ -51,7 +55,7 @@ const contractFactories = {
 }
 
 
-const stateVars = {
+export const stateVars = {
     api3Balance: ({contracts, account}) =>
         account
             ? contracts.token.balanceOf(account)
@@ -95,7 +99,7 @@ const stateVars = {
 }
 
 
-const actions = {
+export const actions = {
     deposit: async (amount, web3) => {
         const
             weiAmount = parseEther(amount),
@@ -116,14 +120,4 @@ const actions = {
 
     stake: (amount, web3) =>
         web3.contracts.pool.stake(parseEther(amount)),
-}
-
-
-module.exports = {
-    connectorFactories,
-    availableServices: keys(connectorFactories),
-    contractAddresses,
-    contractFactories,
-    stateVars,
-    actions,
 }

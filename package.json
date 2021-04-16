@@ -6,6 +6,9 @@
     "lint": "eslint src",
     "postinstall": "patch-package"
   },
+  "sideEffects": [
+    "src/global.css"
+  ],
   "dependencies": {
     "@ethersproject/bignumber": "^5.1.0",
     "@ethersproject/contracts": "^5.1.0",

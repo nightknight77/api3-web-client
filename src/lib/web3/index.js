@@ -1,5 +1,3 @@
-module.exports = {
-    ...require('./context'),
-    ...require('./init'),
-    ...require('./config'),
-}
+export * from './context'
+export * from './init'
+export * from './config'

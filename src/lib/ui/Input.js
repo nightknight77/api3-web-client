@@ -1,4 +1,4 @@
-const {createElement} = require('react')
+import {createElement} from 'react'
 
 
 const Input = ({type, style: extraStyles, size = 'md', ...props}) =>
@@ -26,4 +26,4 @@ const Input = ({type, style: extraStyles, size = 'md', ...props}) =>
     />
 
 
-module.exports = Input
+export default Input

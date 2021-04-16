@@ -1,17 +1,22 @@
-const
-    {createElement, Fragment, useState} = require('react'),
-    {capitalize} = require('lodash-es'),
-    {useWeb3, actions: {deposit, withdraw, stake}} = require('lib/web3'),
-    {useModal} = require('lib/modal'),
-    {Card, Input, Button} = require('lib/ui'),
-    {fmtApi3} = require('lib/util'),
-    logoImg = require('./logo.svg').default
+import {createElement, Fragment, useState} from 'react'
+import {capitalize} from 'lodash-es'
+import {useWeb3, actions} from 'lib/web3'
+import {useModal} from 'lib/modal'
+import {Card, Input, Button} from 'lib/ui'
+import {fmtApi3} from 'lib/util'
+import WalletManager from './WalletManager'
+import Balance from './Balance'
+import Staking from './Staking'
+import Faucet from './Faucet'
+import logoImg from './logo.svg'
+
+const {deposit, withdraw, stake} = actions
 
 
 const sections = (web3, modal) => [
     {
         title: 'Wallet',
-        component: require('./WalletManager'),
+        component: WalletManager,
         cta1: web3.active && {
             title: 'Disconnect',
             action: web3.deactivate,
@@ -19,7 +24,7 @@ const sections = (web3, modal) => [
     },
     {
         title: 'Balance',
-        component: require('./Balance'),
+        component: Balance,
         cta1: {
             title: 'Deposit',
             action: () => modal.open(TransferForm, {
@@ -38,7 +43,7 @@ const sections = (web3, modal) => [
     },
     {
         title: 'Staking',
-        component: require('./Staking'),
+        component: Staking,
         cta1: {
             title: 'Stake',
             action: () => modal.open(TransferForm, {
@@ -49,7 +54,7 @@ const sections = (web3, modal) => [
     },
     web3.chainId === 4 && {
         title: 'Faucet',
-        component: require('./Faucet'),
+        component: Faucet,
     },
 ]
     .filter(Boolean)
@@ -93,6 +98,8 @@ const Landing = () => {
     </>
 }
 
+export default Landing
+
 
 const TransferForm = ({intent, children, onSubmit}) => {
     const [value, setValue] = useState('')
@@ -120,6 +127,3 @@ const TransferForm = ({intent, children, onSubmit}) => {
         </p>
     </div>
 }
-
-
-module.exports = Landing

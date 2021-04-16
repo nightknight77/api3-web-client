@@ -1,16 +1,13 @@
-const
-    {createElement, createContext,
-        useState, useContext, useCallback} = require('react'),
-
-    {Popup} = require('lib/ui'),
-
-    s = require('./style.css').default
+import {createElement, createContext, useState, useContext, useCallback}
+    from 'react'
+import {Popup} from 'lib/ui'
+import s from './style.css'
 
 
 const ModalContext = createContext()
 
 
-const ModalProvider = ({children}) => {
+export const ModalProvider = ({children}) => {
     const
         [title, setTitle] = useState(),
         [component, setComponent] = useState(),
@@ -54,10 +51,4 @@ const ModalProvider = ({children}) => {
 }
 
 
-const useModal = () => useContext(ModalContext)
-
-
-module.exports = {
-    ModalProvider,
-    useModal,
-}
+export const useModal = () => useContext(ModalContext)

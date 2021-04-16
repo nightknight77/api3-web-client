@@ -1,8 +1,8 @@
-const
-    {createElement} = require('react'),
-    {useWeb3} = require('lib/web3'),
-    {Button} = require('lib/ui'),
-    {RINKEBY_FAUCET_URL} = process.env
+import {createElement} from 'react'
+import {useWeb3} from 'lib/web3'
+import {Button} from 'lib/ui'
+
+const {RINKEBY_FAUCET_URL} = process.env
 
 
 const Faucet = () => {
@@ -19,4 +19,4 @@ const Faucet = () => {
 }
 
 
-module.exports = Faucet
+export default Faucet

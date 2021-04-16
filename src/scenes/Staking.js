@@ -1,8 +1,7 @@
-const
-    {createElement} = require('react'),
-    {BigNumber} = require('@ethersproject/bignumber'),
-    {useWeb3} = require('lib/web3'),
-    {fmtApi3} = require('lib/util')
+import {createElement} from 'react'
+import {BigNumber} from '@ethersproject/bignumber'
+import {useWeb3} from 'lib/web3'
+import {fmtApi3} from 'lib/util'
 
 
 const Staking = () => {
@@ -29,4 +28,4 @@ const Staking = () => {
 }
 
 
-module.exports = Staking
+export default Staking

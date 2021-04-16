@@ -1,7 +1,6 @@
-const
-    {createElement} = require('react'),
-    {noop} = require('lodash-es'),
-    s = require('./style.css').default
+import {createElement} from 'react'
+import {noop} from 'lodash-es'
+import s from './style.css'
 
 
 const Popup = ({
@@ -24,4 +23,4 @@ const Popup = ({
     </div>
 
 
-module.exports = Popup
+export default Popup
