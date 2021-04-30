@@ -78,7 +78,7 @@ export const activateWeb3 = async (serviceName, web3Ctx) => {
         .on('Web3ReactUpdate', debounce(e =>
             handleAccountOrChainChange(web3Ctx, e), 50))
 
-        .on('Web3ReactDeactivate', web3Ctx.deactivate)
+        .on('Web3ReactDeactivate', debounce(web3Ctx.deactivate, 50))
 
     handleWeb3Activate(serviceName)
 }
