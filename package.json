@@ -4,7 +4,6 @@
     "start": "NODE_ENV=development webpack serve",
     "build": "NODE_ENV=production webpack",
     "lint": "eslint src",
-    "postinstall": "patch-package",
     "deploy": "cd public && scp -C index.html *.js *.css *.svg api3-wc:"
   },
   "sideEffects": [
@@ -13,7 +12,7 @@
   "dependencies": {
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
-    "@web3-react/walletconnect-connector": "^6.1.9",
+    "@web3-react/walletconnect-connector": "^6.2.0",
     "ethers": "^5.1.0",
     "lodash-es": "^4.17.21",
     "react": "^17.0.2",
@@ -34,7 +33,6 @@
     "html-webpack-plugin": "^5.3.1",
     "mini-css-extract-plugin": "^1.4.1",
     "node-polyfill-webpack-plugin": "^1.1.0",
-    "patch-package": "^6.4.7",
     "react-refresh": "^0.10.0",
     "style-loader": "^2.0.0",
     "webpack": "^5.31.0",
