@@ -25,17 +25,21 @@ const sections = (web3, modal) => [
     {
         title: 'Balance',
         component: Balance,
-        cta1: (web3.poolAllowance && web3.poolAllowance.lt(allowanceRefillThreshold)) ? {
-            title: 'Approve',
-            action: () => grantInfiniteAllowanceToPool(web3),
-        } : {
-            title: 'Deposit',
-            action: () => modal.open(TransferForm, {
-                intent: 'deposit',
-                onSubmit: val => deposit(val, web3).then(modal.close),
-                children: `(Undeposited: ${fmtApi3(web3.api3Balance)})`,
-            }),
-        },
+        cta1: (
+            web3.poolAllowance &&
+                web3.poolAllowance.lt(allowanceRefillThreshold)
+        ) ?
+            {
+                title: 'Approve',
+                action: () => grantInfiniteAllowanceToPool(web3),
+            } : {
+                title: 'Deposit',
+                action: () => modal.open(TransferForm, {
+                    intent: 'deposit',
+                    onSubmit: val => deposit(val, web3).then(modal.close),
+                    children: `(Undeposited: ${fmtApi3(web3.api3Balance)})`,
+                }),
+            },
         cta2: {
             title: 'Withdraw',
             action: () => modal.open(TransferForm, {

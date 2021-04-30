@@ -121,7 +121,7 @@ export const actions = {
             web3.contracts.pool.address,
             maxAllowance,
         ),
-        // See [1]
+    // See [1]
 
     withdraw: (amount, web3) =>
         web3.contracts.pool.withdraw(web3.account, parseEther(amount)),
@@ -130,6 +130,8 @@ export const actions = {
         web3.contracts.pool.stake(parseEther(amount)),
 }
 
+
+/* eslint-disable max-len */
 
 // [1] We are aware of the ERC-20 approve vulnerability (See
 //     https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol#L37-L51),
