@@ -21,7 +21,7 @@ const Staking = () => {
                     style={{margin: 0, fontSize: 12, color: '#777'}}
                 />
                 <h3
-                    children={fmtApi3(value || BigNumber.from(0))}
+                    children={fmtApi3(value)}
                     style={{margin: '8px 0 20px', fontSize: 24}}
                 />
             </div>)

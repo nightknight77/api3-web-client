@@ -43,7 +43,7 @@ export const initWeb3 = web3Ctx => {
 const updateWeb3Numbers = async (fromBlock, web3Ctx) => {
     const setters =
         await promiseAllObj(
-            mapValues(stateVars, getter =>
+            mapValues(stateVars, ({getter}) =>
                 getter({
                     fromBlock,
                     account: state.account,
@@ -88,7 +88,7 @@ const handleAccountOrChainChange = async (
     web3Ctx,
     {account, chainId, provider},
 ) => {
-    web3Ctx.update(mapValues(stateVars, () => undefined))
+    web3Ctx.update(mapValues(stateVars, v => v.default))
 
     if (account) {
         state.account = account

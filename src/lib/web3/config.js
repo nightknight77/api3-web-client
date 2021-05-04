@@ -55,50 +55,82 @@ export const contractFactories = {
 
 
 export const stateVars = {
-    api3Balance: ({contracts, account}) =>
-        account
-            ? contracts.token.balanceOf(account)
-            : BigNumber.from(0),
+    api3Balance: {
+        default: BigNumber.from(0),
 
-    poolAllowance: ({contracts, account}) =>
-        account
-            ? contracts.token.allowance(account, contracts.pool.address)
-            : BigNumber.from(0),
+        getter: ({contracts, account}) =>
+            account
+                ? contracts.token.balanceOf(account)
+                : BigNumber.from(0),
+    },
 
-    stakeAmount: ({contracts, account}) =>
-        account
-            ? contracts.pool.userStake(account)
-            : BigNumber.from(0),
+    poolAllowance: {
+        default: BigNumber.from(0),
 
-    depositAmount: async ({contracts, account, fromBlock}) => {
-        if (!account)
-            return BigNumber.from(0)
+        getter: ({contracts, account}) =>
+            account
+                ? contracts.token.allowance(account, contracts.pool.address)
+                : BigNumber.from(0),
+    },
 
-        const
-            f = contracts.pool.filters,
+    stakeAmount: {
+        default: BigNumber.from(0),
 
-            spec = {
-                Deposited: {op: 'add', filter: f.Deposited(account)},
-                Withdrawn: {op: 'sub', filter: f.Withdrawn(null, account)},
-                Staked:    {op: 'sub', filter: f.Staked(account)},
-                Unstaked:  {op: 'add', filter: f.Unstaked(account)},
-            },
+        getter: ({contracts, account}) =>
+            account
+                ? contracts.pool.userStake(account)
+                : BigNumber.from(0),
+    },
 
-            eventGroups = await Promise.all(
-                values(spec)
-                    .map(({filter}) =>
-                        contracts.pool.queryFilter(filter, fromBlock)),
-            ),
+    depositAmount: {
+        default: BigNumber.from(0),
 
-            events = flatten(eventGroups),
+        getter: async ({contracts, account, fromBlock}) => {
+            if (!account)
+                return BigNumber.from(0)
 
-            updateAmount =
-                events.reduce(
-                    (sum, e) => sum[spec[e.event].op](e.args.amount),
-                    BigNumber.from(0),
-                )
+            const
+                f = contracts.pool.filters,
 
-        return (prevAmount = BigNumber.from(0)) => prevAmount.add(updateAmount)
+                spec = {
+                    Deposited: {op: 'add', filter: f.Deposited(account)},
+                    Withdrawn: {op: 'sub', filter: f.Withdrawn(null, account)},
+                    Staked:    {op: 'sub', filter: f.Staked(account)},
+                    Unstaked:  {op: 'add', filter: f.Unstaked(account)},
+                },
+
+                eventGroups = await Promise.all(
+                    values(spec)
+                        .map(({filter}) =>
+                            contracts.pool.queryFilter(filter, fromBlock)),
+                ),
+
+                events = flatten(eventGroups),
+
+                updateAmount =
+                    events.reduce(
+                        (sum, e) => sum[spec[e.event].op](e.args.amount),
+                        BigNumber.from(0),
+                    )
+
+            return (prevAmount = BigNumber.from(0)) =>
+                prevAmount.add(updateAmount)
+        },
+    },
+
+    apr: {
+        default: BigNumber.from(0),
+        getter: ({contracts}) => contracts.pool.currentApr(),
+    },
+
+    totalStake: {
+        default: BigNumber.from(0),
+        getter: ({contracts}) => contracts.pool.totalStake(),
+    },
+
+    stakeTarget: {
+        default: BigNumber.from(0),
+        getter: ({contracts}) => contracts.pool.stakeTarget(),
     },
 }
 

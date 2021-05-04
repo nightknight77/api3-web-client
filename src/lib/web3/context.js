@@ -10,7 +10,7 @@ const {Web3Provider: Web3EthersProvider} = providers
 
 const initialWeb3AccountValue = {
     contracts: {},
-    ...mapValues(stateVars, () => undefined),
+    ...mapValues(stateVars, v => v.default),
 }
 
 
