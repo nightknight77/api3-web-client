@@ -1,0 +1,74 @@
+.container {
+    display: flex;
+    flex-flow: column;
+    gap: 2em;
+}
+
+.header {
+    font-size: 2em;
+    font-weight: 200;
+    color: lightgreen;
+}
+
+.wrapper {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 2em;
+}
+
+.rewardsContainer {
+    display: flex;
+    flex-flow: column;
+    border-top: 1px solid #bbb;
+}
+
+.annualRate {
+    display: flex;
+    flex-flow: row;
+    gap: 3em;
+    border-bottom: 1px solid #bbb;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    height: 5em;
+}
+
+.annualReward {
+    display: flex;
+    flex-flow: row;
+    gap: 3em;
+    padding-top: 2em;
+    padding-bottom: 2em;
+}
+
+.rate {
+    font-size: 5em;
+    font-weight: bold;
+    color: white;
+    width: 3em;
+    text-align: right;
+}
+
+.reward {
+    font-size: 1.45em;
+    font-weight: 100;
+    line-height: 2em;
+}
+.stakeContainer {
+    display: flex;
+    flex-flow: column;
+    font-size: 1em;
+    align-items: center;
+    justify-content: center;
+    padding: 2em;
+    height: 5em;
+    border-bottom: 1px solid #bbb;
+}
+
+.target {
+    border-bottom: 0px;
+}
+
+.stakeAmount {
+    color: white;
+    font-size: 1.3em;
+}
