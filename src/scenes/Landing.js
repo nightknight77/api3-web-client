@@ -109,28 +109,47 @@ export default Landing
 
 
 const TransferForm = ({intent, children, onSubmit}) => {
-    const [value, setValue] = useState('')
+    const
+        [value, setValue] = useState(''),
+        [confirmation, setConfirmation] = useState(false)
 
-    return <div style={{textAlign: 'center'}}>
-        <p>How many tokens would you like to {intent}?</p>
+    return confirmation
+        ? <div style={{textAlign: 'center'}}>
+            <p>Are you sure you want to {intent} {value} tokens?</p>
 
-        {children && <p children={children} />}
+            <p>
+                <Button
+                    variant='link'
+                    children='Cancel'
+                    onClick={() => setConfirmation(false)}
+                />
+                <Button
+                    children={capitalize(intent)}
+                    onClick={() => onSubmit(value)}
+                />
+            </p>
+        </div>
 
-        <p>
-            <Input
-                type='number'
-                value={value}
-                placeholder='00'
-                size='lg'
-                onChange={e => setValue(e.target.value)}
-            />
-        </p>
+        : <div style={{textAlign: 'center'}}>
+            <p>How many tokens would you like to {intent}?</p>
 
-        <p>
-            <Button
-                children={capitalize(intent)}
-                onClick={() => onSubmit(value)}
-            />
-        </p>
-    </div>
+            {children && <p children={children} />}
+
+            <p>
+                <Input
+                    type='number'
+                    value={value}
+                    placeholder='00'
+                    size='lg'
+                    onChange={e => setValue(e.target.value)}
+                />
+            </p>
+
+            <p>
+                <Button
+                    children={capitalize(intent)}
+                    onClick={() => setConfirmation(true)}
+                />
+            </p>
+        </div>
 }
