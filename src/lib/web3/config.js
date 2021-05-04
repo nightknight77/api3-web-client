@@ -1,4 +1,4 @@
-import {Contract, BigNumber, utils} from 'ethers'
+import {Contract, BigNumber, FixedNumber, utils} from 'ethers'
 import {InjectedConnector} from '@web3-react/injected-connector'
 import {WalletConnectConnector} from '@web3-react/walletconnect-connector'
 import {flatten} from 'lodash-es'
@@ -51,6 +51,11 @@ export const contractFactories = {
 
     token: (chainId, signer) =>
         new Contract(contractAddresses[chainId].token, tokenABI, signer),
+}
+
+
+const formulas = {
+    apy: apr => (Math.pow(1 + Number(apr) / 1e8 / 52, 52) - 1) * 100,
 }
 
 
@@ -118,11 +123,6 @@ export const stateVars = {
         },
     },
 
-    apr: {
-        default: BigNumber.from(0),
-        getter: ({contracts}) => contracts.pool.currentApr(),
-    },
-
     totalStake: {
         default: BigNumber.from(0),
         getter: ({contracts}) => contracts.pool.totalStake(),
@@ -131,6 +131,58 @@ export const stateVars = {
     stakeTarget: {
         default: BigNumber.from(0),
         getter: ({contracts}) => contracts.pool.stakeTarget(),
+    },
+
+    targetMet: {
+        default: '0.00',
+        getter: async ({contracts}) => {
+            const
+                totalStake = await contracts.pool.totalStake(),
+                stakeTarget = await contracts.pool.stakeTarget()
+
+            if (totalStake.gte(stakeTarget))
+                return '100.0'
+
+            return FixedNumber.from(totalStake.toString())
+                .mulUnsafe(FixedNumber.from(100))
+                .divUnsafe(FixedNumber.from(stakeTarget.toString()))
+                .round(1)
+                .toString()
+        },
+    },
+
+    apy: {
+        default: '0.00',
+        getter: async ({contracts}) =>
+            formulas.apy(await contracts.pool.currentApr()).toFixed(1),
+    },
+
+    annualInflationRate: {
+        default: '0.00',
+        getter: async ({contracts}) => {
+            const
+                apy = formulas.apy(await contracts.pool.currentApr()),
+
+                totalStake = await contracts.pool.totalStake(),
+                totalSupply = await contracts.token.totalSupply(),
+
+                annualMintedTokens =
+                    FixedNumber.from(totalStake.toString())
+                        .mulUnsafe(FixedNumber.from(apy.toFixed(2)))
+                        .divUnsafe(FixedNumber.from(100)),
+
+                annualInflationRate =
+                    annualMintedTokens
+                        .divUnsafe(
+                            annualMintedTokens.addUnsafe(
+                                FixedNumber.from(totalSupply.toString()))
+                        )
+                        .mulUnsafe(FixedNumber.from(100))
+                        .round(1)
+                        .toString()
+
+            return annualInflationRate
+        },
     },
 }
 

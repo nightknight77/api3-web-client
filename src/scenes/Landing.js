@@ -7,6 +7,7 @@ import {fmtApi3} from 'lib/util'
 import WalletManager from './WalletManager'
 import Balance from './Balance'
 import Staking from './Staking'
+import DAOPool from './DAOPool'
 import Faucet from './Faucet'
 import logoImg from './logo.svg'
 
@@ -58,6 +59,10 @@ const sections = (web3, modal) => [
                 onSubmit: val => stake(val, web3).then(modal.close),
             }),
         },
+    },
+    {
+        title: 'DAO Pool',
+        component: DAOPool,
     },
     web3.chainId === 4 && {
         title: 'Faucet',

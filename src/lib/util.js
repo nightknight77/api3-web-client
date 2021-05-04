@@ -15,7 +15,15 @@ export const promiseAllObj = async promiseDict => {
 
 
 // @param amount BigNumber
-export const fmtApi3 = amount => commify(formatEther(amount))
+// @param roundDecimals int optional
+export const fmtApi3 = (amount, roundDecimals) => {
+    const formatted = commify(formatEther(amount))
+
+    if (!roundDecimals)
+        return formatted
+
+    return formatted.slice(0, formatted.indexOf('.') + roundDecimals + 1)
+}
 
 
 export const abbr = (
