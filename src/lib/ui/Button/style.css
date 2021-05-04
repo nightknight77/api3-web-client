@@ -1,4 +1,5 @@
 .button {
+    position: relative;
     margin: 5px;
     padding: 10px;
     background-color: transparent;
@@ -8,6 +9,14 @@
 .button.variant-primary {
     border: 1px solid #777;
     color: #777;
+}
+.button.variant-primary::after {
+    position: absolute;
+    left: -1px;
+    bottom: -5px;
+    width: calc(100% + 2px);
+    border-bottom: 1px solid #777;
+    content: '';
 }
 .button.variant-link {
     color: #7ce3cb;
