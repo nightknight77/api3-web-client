@@ -1,11 +1,28 @@
 .button {
+    position: relative;
     margin: 5px;
     padding: 10px;
     background-color: transparent;
-    color: #777;
-    border: 1px solid #777;
     cursor: pointer;
+    color: #777;
 }
+
+.button.variant-primary {
+    border: 1px solid #777;
+}
+.button.variant-primary::after {
+    position: absolute;
+    left: -1px;
+    bottom: -5px;
+    width: calc(100% + 2px);
+    border-bottom: 1px solid #777;
+    content: '';
+}
+.button.variant-link {
+    border-width: 0;
+    text-decoration: underline;
+}
+
 .button .prefix {
     margin-right: 5px;
 }

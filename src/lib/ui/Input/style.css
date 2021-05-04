@@ -1,0 +1,18 @@
+.input {
+    padding: 10px 0;
+    margin: 5px;
+    border: 0 solid #777;
+    border-bottom-width: 1px;
+    color: #777;
+    outline: 0;
+    background-color: transparent;
+    width: 70px;
+}
+.input.type-number {
+    font-weight: bold;
+    width: 28px;
+    text-align: center;
+}
+.input.size-sm { font-size: 0.8em; }
+.input.size-md { font-size: 1em; }
+.input.size-lg { font-size: 1.5em; }
