@@ -132,6 +132,29 @@ export const stateVars = {
         default: BigNumber.from(0),
         getter: ({contracts}) => contracts.pool.stakeTarget(),
     },
+    
+    apy: {
+        default: BigNumber.from(0),
+        getter: async ({contracts}) => 
+            BigNumber.from(1).add(
+                (await contracts.pool.currentApr()).mul(
+                    BigNumber.from(52).div(BigNumber.from(BigNumber.from(10)
+                        .pow(18))))).pow(
+                52).sub(BigNumber.from(1)),
+    },
+    ait: {
+        default: BigNumber.from(0),
+        getter: async ({contracts}) => {
+            let currApy = contracts.pool.currentApr()
+            let totalStake = contracts.pool.totalStake()
+            let totalSupply = contracts.pool.totalSupply()
+            let annualMintedToken = (await totalStake)
+                .mul((await currApy).div(100))
+            return (await annualMintedToken)
+                .div((await annualMintedToken)
+                    .add((await totalSupply)).mul(100))
+        },
+    },
 }
 
 

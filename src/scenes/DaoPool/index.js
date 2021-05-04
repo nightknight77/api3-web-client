@@ -12,7 +12,9 @@ const DaoPool = () => {
             <div className={s.wrapper}>
                 <div className={s.rewardsContainer}>
                     <div className={s.annualRate}>
-                        <div className={s.rate}>10%</div>
+                        <div className={s.rate}>
+                            {fmtApi3(web3.apy || BigNumber.from(0))}%
+                        </div>
                         <div className={s.reward}>
                             Annual rewards
                             <br />
@@ -20,7 +22,9 @@ const DaoPool = () => {
                         </div>
                     </div>
                     <div className={s.annualReward}>
-                        <div className={s.rate}>2%</div>
+                        <div className={s.rate}>
+                            {fmtApi3(web3.ait || BigNumber.from(0))}%
+                        </div>
                         <div className={s.reward}>
                             Annual Inflation
                             <br />
