@@ -37,7 +37,9 @@ const DaoPool = () => {
                     </div>
                     <div className={s.stakeContainer + ' ' + s.target}>
                         <div>STAKING TARGET</div>
-                        <div className={s.stakeAmount}>10,000,000</div>
+                        <div className={s.stakeAmount}>
+                            {fmtApi3(web3.stakeTarget || BigNumber.from(0))}
+                        </div>
                     </div>
                 </div>
                 <div>Chart</div>
