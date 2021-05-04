@@ -139,8 +139,8 @@ export const stateVars = {
             BigNumber.from(1).add(
                 (await contracts.pool.currentApr()).mul(
                     BigNumber.from(52).div(BigNumber.from(BigNumber.from(10)
-                        .pow(18))))).pow(
-                52).sub(BigNumber.from(1)),
+                        .pow(18))))).pow(52)
+                .sub(BigNumber.from(1)),
     },
     ait: {
         default: BigNumber.from(0),

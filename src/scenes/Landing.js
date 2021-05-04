@@ -75,45 +75,43 @@ const Landing = () => {
         modal = useModal(),
         sections_ = sections(web3, modal)
 
-    return (
-        <>
-            <h1 style={{textAlign: 'center'}}>
-                <img src={logoImg} />
-            </h1>
+    return <>
+        <h1 style={{textAlign: 'center'}}>
+            <img src={logoImg} />
+        </h1>
 
-            <div
-                style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-                children={sections_.map(({title, component, cta1, cta2}) => (
-                    <Card
-                        key={component.name}
-                        title={title}
-                        cta1={cta1}
-                        cta2={cta2}
-                        style={{
-                            flex: '0 0 250px',
-                            height: 200,
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        }}
-                        children={<div children={createElement(component)} />}
-                    />
-                ))}
-            />
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                }}
-                children={<DaoPool />}
-            />
-        </>
-    )
+        <div
+            style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}
+            children={sections_.map(({title, component, cta1, cta2}) =>
+                <Card
+                    key={component.name}
+                    title={title}
+                    cta1={cta1}
+                    cta2={cta2}
+                    style={{
+                        flex: '0 0 250px',
+                        height: 200,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                    children={<div children={createElement(component)} />}
+                />,
+            )}
+        />
+        <div
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+            }}
+            children={<DaoPool />}
+        />
+    </>
 }
 
 export default Landing
