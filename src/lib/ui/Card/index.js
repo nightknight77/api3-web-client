@@ -33,6 +33,7 @@ const Card = ({
                     children={cta2Title}
                     onClick={cta2Action}
                     variant='link'
+                    className={s.button}
                 />}
         </footer>
     </div>
