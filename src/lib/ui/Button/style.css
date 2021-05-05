@@ -24,6 +24,15 @@
     text-decoration: underline;
 }
 
+.button:disabled {
+    border-color: #777;
+    color: #777;
+    cursor: not-allowed;
+}
+.button.variant-primary:disabled::after {
+    border-bottom-color: #777;
+}
+
 .button .prefix {
     margin-right: 5px;
 }
