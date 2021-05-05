@@ -4,11 +4,11 @@
     padding: 10px;
     background-color: transparent;
     cursor: pointer;
-    color: #777;
 }
 
 .button.variant-primary {
     border: 1px solid #777;
+    color: #777;
 }
 .button.variant-primary::after {
     position: absolute;
@@ -19,6 +19,7 @@
     content: '';
 }
 .button.variant-link {
+    color: #7ce3cb;
     border-width: 0;
     text-decoration: underline;
 }
