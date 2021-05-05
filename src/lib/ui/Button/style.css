@@ -7,7 +7,7 @@
 }
 
 .button.variant-primary {
-    border: 1px solid #777;
+    border: 1px solid #7ce3cb;
     color: #777;
 }
 .button.variant-primary::after {
@@ -15,7 +15,7 @@
     left: -1px;
     bottom: -5px;
     width: calc(100% + 2px);
-    border-bottom: 1px solid #777;
+    border-bottom: 1px solid #7ce3cb;
     content: '';
 }
 .button.variant-link {
