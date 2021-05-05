@@ -184,6 +184,41 @@ export const stateVars = {
             return annualInflationRate
         },
     },
+
+    pendingUnstake: {
+        default: null,
+
+        getter: async ({contracts, address}) => {
+            const
+                pc = contracts.pool,
+
+                scheduleUnstakeEvents =
+                    await pc.queryFilter(pc.filters.ScheduledUnstake(address))
+
+            if (!scheduleUnstakeEvents.length)
+                return null
+
+            const
+                lastScheduleUnstakeEvent = scheduleUnstakeEvents.pop(),
+
+                unstakeEventsAfterLastSchedule =
+                    await pc.queryFilter(
+                        pc.filters.Unstaked(address),
+                        lastScheduleUnstakeEvent.blockNumber,
+                    )
+
+            if (unstakeEventsAfterLastSchedule.length)
+                // means that there is no pending unstaking
+                return null
+
+            const
+                {amount, scheduledFor} = lastScheduleUnstakeEvent.args,
+
+                deadline = scheduledFor.add(await pc.EPOCH_LENGTH())
+
+            return {amount, scheduledFor, deadline}
+        }
+    },
 }
 
 
@@ -212,6 +247,15 @@ export const actions = {
 
     stake: (amount, web3) =>
         web3.contracts.pool.stake(parseEther(amount)),
+
+    scheduleUnstake: (amount, web3) =>
+        web3.contracts.pool.scheduleUnstake(parseEther(amount)),
+
+    unstake: web3 =>
+        web3.contracts.pool.unstake(),
+
+    unstakeAndWithdraw: web3 =>
+        web3.contracts.pool.unstakeAndWithdraw(web3.account),
 }
 
 
