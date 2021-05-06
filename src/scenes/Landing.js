@@ -111,7 +111,7 @@ const Landing = () => {
                     cta2={cta2}
                     style={{
                         flex: '0 0 250px',
-                        height: 200,
+                        height: 240,
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
