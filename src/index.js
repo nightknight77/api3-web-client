@@ -1,24 +1,32 @@
-import React, {useEffect} from 'react'
+import React, {createElement, useEffect} from 'react'
 import ReactDOM from 'react-dom'
+import {RouterProvider, Route} from 'react-router5'
+import {router, routesByName} from './routing'
 import {Web3Provider, useWeb3, initWeb3} from './lib/web3'
 import {ModalProvider} from './lib/modal'
-import {Landing} from './scenes'
 import './global.css'
 
 
-const boot = () => {
-    ReactDOM.render(<App />, document.getElementById('app'))
+const boot = () =>
+    router.start(() => {
+        ReactDOM.render(
+            <App router={router} />,
+            document.getElementById('app'),
+        )
 
-    if (process.env.NODE_ENV === 'development')
-        module.hot.accept()
-}
+        if (process.env.NODE_ENV === 'development')
+            module.hot.accept()
+    })
 
 
-const App = () =>
-    <Web3Provider children={
-        <ModalProvider children={
-            <AppInitializer children={
-                <Landing />} />} />} />
+const App = ({router}) =>
+    <RouterProvider router={router} children={
+        <Web3Provider children={
+            <ModalProvider children={
+                <AppInitializer children={
+                    <Route children={({route}) =>
+                        createElement(routesByName[route.name].component)
+                    } />} />} />} /> } />
 
 
 const AppInitializer = ({children}) => {
