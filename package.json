@@ -5,7 +5,7 @@
     "start": "NODE_ENV=development webpack serve",
     "build": "NODE_ENV=production webpack",
     "lint": "eslint src",
-    "deploy": "cd public && scp -C index.html *.js *.css *.svg api3-wc:"
+    "deploy": "cd public && scp -C index.html *.js *.css *.svg *.png api3-wc:"
   },
   "sideEffects": [
     "src/global.css"
