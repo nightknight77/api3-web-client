@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react'
+import {padStart} from 'lodash-es'
 import {useWeb3, actions} from 'lib/web3'
 import {fmtApi3, duration} from 'lib/util'
 import {Button, Heading3} from 'lib/ui'
@@ -51,23 +52,27 @@ const Unstaking = () => {
                 <th>Cooldown</th>
 
                 <td>
-                    <table className={s.cooldown}>
-                        <tbody>
-                            <tr>
-                                <td>{cooldownDuration.days} : </td>
-                                <td>{cooldownDuration.hrs} : </td>
-                                <td>{cooldownDuration.mins} : </td>
-                                <td>{cooldownDuration.secs}</td>
-                            </tr>
+                    <table className={s.cooldown}><tbody>
+                        <tr>
+                            <td>{cooldownDuration.days} : </td>
+                            <td>
+                                {padStart(cooldownDuration.hrs, 2, '0')} :
+                            </td>
+                            <td>
+                                {padStart(cooldownDuration.mins, 2, '0')} :
+                            </td>
+                            <td>
+                                {padStart(cooldownDuration.secs, 2, '0')}
+                            </td>
+                        </tr>
 
-                            <tr>
-                                <th>D</th>
-                                <th>HR</th>
-                                <th>MIN</th>
-                                <th>SEC</th>
-                            </tr>
-                        </tbody>
-                    </table>
+                        <tr>
+                            <th>D</th>
+                            <th>HR</th>
+                            <th>MIN</th>
+                            <th>SEC</th>
+                        </tr>
+                    </tbody></table>
                 </td>
             </tr>
         </tbody></table>
