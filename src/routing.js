@@ -2,11 +2,12 @@ import {createRouter} from 'router5'
 import browserPlugin from 'router5-plugin-browser'
 import loggerPlugin from 'router5-plugin-logger'
 import {keyBy} from 'lodash-es'
-import {Landing} from './scenes'
+import {Landing, ProposalListing} from './scenes'
 
 
 const routes = [
-    {name: 'landing', path: '/', component: Landing},
+    {name: 'landing',       path: '/',          component: Landing},
+    {name: 'proposal-list', path: '/proposals', component: ProposalListing},
 ]
 
 export const routesByName = keyBy(routes, 'name')
