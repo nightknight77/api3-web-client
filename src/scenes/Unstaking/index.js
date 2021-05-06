@@ -12,32 +12,55 @@ const Unstaking = () => {
     const
         web3 = useWeb3(),
 
-        [cooldown, setCooldown] = useState(() => {
-            const
-                scheduledForTs = web3.pendingUnstake.scheduledFor.toNumber(),
-                nowTs = Date.now() / 1000
+        scheduledForTs = web3.pendingUnstake.scheduledFor.toNumber(),
+        deadlineTs = web3.pendingUnstake.deadline.toNumber(),
+        nowTs = Date.now() / 1000,
 
-            return scheduledForTs < nowTs
-                ? 0
-                : Math.ceil(scheduledForTs - nowTs)
+        [status, setStatus] = useState(() => {
+            if (scheduledForTs > nowTs) return 'scheduled'
+            if (nowTs > deadlineTs) return 'overdue'
+            return 'pending'
         }),
 
-        cooldownDuration = duration(cooldown),
+        [countdown, setCountdown] = useState(() =>
+            Math.ceil({
+                scheduled: scheduledForTs - nowTs,
+                pending: deadlineTs - nowTs,
+                overdue: 0,
+            }[status]),
+        ),
+
+        countdownDuration = duration(countdown),
+
+        scheduledForDuration =
+            status === 'scheduled' ? countdownDuration : duration(0),
+
+        deadlineDuration =
+            status === 'pending' ? countdownDuration : duration(0),
 
         intervalId = useRef()
 
     useEffect(() => {
-        if (cooldown === 0)
+        if (status !== 'overdue')
+            intervalId.current =
+                setInterval(() => setCountdown(c => c - 1), 1000)
+    }, [])
+
+    useEffect(() => {
+        if (countdown !== 0)
             return
 
-        intervalId.current =
-            setInterval(() => {
-                if (cooldown === 0)
-                    clearInterval(intervalId.current)
+        if (status === 'scheduled') {
+            setStatus('pending')
+            setCountdown(Math.ceil(deadlineTs - Date.now() / 1000))
+        }
 
-                setCooldown(cooldown => cooldown - 1)
-            }, 1000)
-    }, [])
+        if (status === 'pending') {
+            setStatus('overdue')
+            clearInterval(intervalId.current)
+        }
+    }, [countdown])
+
 
     return <div className={s.root}>
         <Heading3 children='Pending API3 tokens unstaking' />
@@ -54,15 +77,15 @@ const Unstaking = () => {
                 <td>
                     <table className={s.cooldown}><tbody>
                         <tr>
-                            <td>{cooldownDuration.days} : </td>
+                            <td>{scheduledForDuration.days} : </td>
                             <td>
-                                {padStart(cooldownDuration.hrs, 2, '0')} :
+                                {padStart(scheduledForDuration.hrs, 2, '0')} :
                             </td>
                             <td>
-                                {padStart(cooldownDuration.mins, 2, '0')} :
+                                {padStart(scheduledForDuration.mins, 2, '0')} :
                             </td>
                             <td>
-                                {padStart(cooldownDuration.secs, 2, '0')}
+                                {padStart(scheduledForDuration.secs, 2, '0')}
                             </td>
                         </tr>
 
@@ -77,18 +100,28 @@ const Unstaking = () => {
             </tr>
         </tbody></table>
 
+        {['pending', 'overdue'].includes(status) &&
+            <p className={s.deadlineWarning}>
+                You have
+                &nbsp;{deadlineDuration.days} days
+                &nbsp;{deadlineDuration.hrs} hours
+                &nbsp;{deadlineDuration.mins} minutes
+                &nbsp;{deadlineDuration.secs} seconds
+                remaining to unstake.
+            </p>}
+
         <p className={s.footer}>
             <Button
                 variant='link'
                 children='Unstake & Withdraw'
-                disabled
                 onClick={() => unstakeAndWithdraw(web3)}
+                disabled={status !== 'pending'}
             />
 
             <Button
                 children='Unstake'
-                disabled
                 onClick={() => unstake(web3)}
+                disabled={status !== 'pending'}
             />
         </p>
     </div>
