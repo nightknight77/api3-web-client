@@ -23,6 +23,9 @@
     border-top-right-radius: 15px;
     border-bottom-right-radius: 15px;
 }
+.bar .grayout {
+    background-color: #555;
+}
 
 .legends {
     display: flex;

@@ -13,7 +13,12 @@ ul.proposals > li {
 .votebar { flex-basis: 30%; }
 
 .info > h3 {
+    color: #ddd;
     margin: 10px 0 20px;
+}
+.info.passed > h3,
+.info.rejected > h3 {
+    color: #555;
 }
 .info > section {
     display: flex;
@@ -31,6 +36,10 @@ ul.proposals > li {
 
 .idAndRemaining {
     font-size: 0.9em;
+}
+.info.passed .idAndRemaining,
+.info.rejected .idAndRemaining {
+    color: #555;
 }
 
 .link {

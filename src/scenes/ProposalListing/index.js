@@ -44,7 +44,7 @@ const Proposals = () => {
         <ul className={s.proposals}>
             {mockProposals.map(p =>
                 <li key={p.id}>
-                    <section className={s.info}>
+                    <section className={s.info + ' ' + s[p.status]}>
                         <h3>{p.title}</h3>
 
                         <section>
@@ -67,7 +67,11 @@ const Proposals = () => {
                     </section>
 
                     <section className={s.votebar}>
-                        <VoteBar for_={p.for} against={p.against} />
+                        <VoteBar
+                            for_={p.for}
+                            against={p.against}
+                            active={p.status === 'active'}
+                        />
                     </section>
 
                     <a

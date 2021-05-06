@@ -4,17 +4,25 @@ import negativeIcon from './negative.png'
 import s from './style.css'
 
 
-const VoteBar = ({for_, against}) => <>
+const VoteBar = ({for_, against, active = true}) => <>
     <div className={s.barWithIcons}>
         <img src={positiveIcon} />
 
         <div className={s.bar}>
             <div
-                className={s.for}
+                className={
+                    s.for
+                    + ' '
+                    + ((!active && for_ < against) ? s.grayout : '')
+                }
                 style={{width: for_ + '%'}}
             />
             <div
-                className={s.against}
+                className={
+                    s.against
+                    + ' '
+                    + ((!active && against < for_) ? s.grayout : '')
+                }
                 style={{width: against + '%'}}
             />
         </div>
