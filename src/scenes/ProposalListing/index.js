@@ -1,9 +1,15 @@
-import React from 'react'
-import {Card, VoteBar} from 'lib/ui'
+import React, {useState} from 'react'
+import {useWeb3, actions} from 'lib/web3'
+import {Card, VoteBar, Input} from 'lib/ui'
 import {duration} from 'lib/util'
-import {padStart, capitalize} from 'lodash-es'
+import {padStart, capitalize, noop} from 'lodash-es'
+import {useModal} from 'lib/modal'
+import {Button} from 'lib/ui'
 import statusActiveIcon from './status-active.png'
 import s from './style.css'
+
+
+const {createProposal} = actions
 
 
 const mockProposals = [{
@@ -31,10 +37,20 @@ const mockProposals = [{
 
 
 const Proposals = () => {
+    const
+        web3 = useWeb3(),
+        modal = useModal()
+
     return <Card
         cta1={{
             title: 'New Proposal',
-            action: () => alert('Not implemented yet'),
+            action: () => modal.open(ProposalForm, {
+                onSubmit: val => {
+                    console.info('proposal submitted', val)
+
+                    createProposal(val.description, web3)
+                },
+            }),
         }}
         cta2={{
             title: 'View All Proposals',
@@ -90,6 +106,23 @@ const statusIcons = {
     active: <img src={statusActiveIcon} />,
     rejected: '✕',
     passed: '✓',
+}
+
+
+const ProposalForm = ({onSubmit = noop}) => {
+    const [description, setDescription] = useState()
+
+    return <>
+        <Input
+            onChange={e => setDescription(e.target.value)}
+            placeholder='Description'
+        />
+
+        <Button
+            onClick={() => onSubmit({description})}
+            children='OK'
+        />
+    </>
 }
 
 

@@ -4,6 +4,7 @@ import {WalletConnectConnector} from '@web3-react/walletconnect-connector'
 import {flatten} from 'lodash-es'
 import poolABI from './contracts/pool-abi'
 import tokenABI from './contracts/token-abi'
+import mainVotingABI from './contracts/main-voting-abi'
 
 const
     {parseEther} = utils,
@@ -33,14 +34,17 @@ export const contractAddresses = {
     1: {
         pool: process.env.POOL_CONTRACT_ADDR_MAINNET,
         token: process.env.TOKEN_CONTRACT_ADDR_MAINNET,
+        mainVoting: process.env.MAIN_VOTING_CONTRACT_ADDR_MAINNET,
     },
     4: {
         pool: process.env.POOL_CONTRACT_ADDR_RINKEBY,
         token: process.env.TOKEN_CONTRACT_ADDR_RINKEBY,
+        mainVoting: process.env.MAIN_VOTING_CONTRACT_ADDR_RINKEBY,
     },
     [DEVCHAIN_ID]: {
         pool: process.env.POOL_CONTRACT_ADDR_DEV,
         token: process.env.TOKEN_CONTRACT_ADDR_DEV,
+        mainVoting: process.env.MAIN_VOTING_CONTRACT_ADDR_DEV,
     },
 }
 
@@ -51,6 +55,9 @@ export const contractFactories = {
 
     token: (chainId, signer) =>
         new Contract(contractAddresses[chainId].token, tokenABI, signer),
+
+    mainVoting: (chainId, signer) =>
+        new Contract(contractAddresses[chainId].token, mainVotingABI, signer),
 }
 
 
@@ -256,6 +263,16 @@ export const actions = {
 
     unstakeAndWithdraw: web3 =>
         web3.contracts.pool.unstakeAndWithdraw(web3.account),
+
+    createProposal: async (description, web3) => {
+        console.info('creating proposal', description, web3.contracts.mainVoting)
+
+        const reply = await web3.contracts.mainVoting['newVote(bytes,string)']('0x00', description)
+
+        console.log('REPLY', reply)
+
+        return reply
+    },
 }
 
 
