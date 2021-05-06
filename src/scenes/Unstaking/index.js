@@ -81,14 +81,14 @@ const Unstaking = () => {
             <Button
                 variant='link'
                 children='Unstake & Withdraw'
-                onClick={unstakeAndWithdraw}
                 disabled
+                onClick={() => unstakeAndWithdraw(web3)}
             />
 
             <Button
                 children='Unstake'
-                onClick={unstake}
                 disabled
+                onClick={() => unstake(web3)}
             />
         </p>
     </div>
