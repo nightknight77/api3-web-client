@@ -1,0 +1,32 @@
+.root {
+    text-align: center;
+}
+table.unstaking {
+    border-spacing: 15px 5px;
+}
+table.unstaking th { text-align: right; }
+table.unstaking td { text-align: left; }
+tr.amount td {
+    font-size: 2em;
+    color: white;
+}
+table.cooldown td,
+table.cooldown th {
+    line-height: 0.8em;
+}
+table.cooldown td {
+    color: white;
+}
+table.cooldown th {
+    text-align: left;
+    color: #999;
+    font-size: 0.8em;
+}
+p.deadlineWarning {
+    font-size: 0.8em;
+}
+p.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: space-between;
+}

@@ -6,8 +6,8 @@
     margin: 20px;
     padding: 20px;
 }
-.card header,
-.card footer {
+.card > header,
+.card > footer {
     position: absolute;
     width: calc(100% - 60px);
     height: 40px;
@@ -16,14 +16,11 @@
     align-items: center;
     background-color: black;
 }
-.card header {
+.card > header {
     top: -20px;
     justify-content: space-between;
 }
-.card footer {
+.card > footer {
     bottom: -20px;
     justify-content: center;
-}
-.card footer .button {
-    color: #7ce3db;
 }

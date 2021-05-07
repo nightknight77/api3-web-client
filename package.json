@@ -5,7 +5,7 @@
     "start": "NODE_ENV=development webpack serve",
     "build": "NODE_ENV=production webpack",
     "lint": "eslint src",
-    "deploy": "cd public && scp -C index.html *.js *.css *.svg api3-wc:"
+    "deploy": "cd public && scp -C index.html *.js *.css *.svg *.png api3-wc:"
   },
   "sideEffects": [
     "src/global.css"
@@ -17,7 +17,11 @@
     "ethers": "^5.1.0",
     "lodash-es": "^4.17.21",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-router5": "^8.0.1",
+    "router5": "^8.0.1",
+    "router5-plugin-browser": "^8.0.1",
+    "router5-plugin-logger": "^8.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",

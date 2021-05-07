@@ -1,0 +1,35 @@
+.barWithIcons {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.bar {
+    border: 1px solid #777;
+    border-radius: 15px;
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    height: 15px;
+    margin: 5px;
+    padding: 2px;
+}
+.bar .for {
+    background-color: #7ce3cb;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+.bar .against {
+    background-color: #d233f2;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+.bar .grayout {
+    background-color: #555;
+}
+
+.legends {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-size: 0.9em;
+}

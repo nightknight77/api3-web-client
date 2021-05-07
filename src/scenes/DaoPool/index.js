@@ -1,5 +1,4 @@
 import React from 'react'
-import {BigNumber} from 'ethers'
 import s from './style.css'
 import {useWeb3} from '../../lib/web3'
 import {fmtApi3} from '../../lib/util'
@@ -13,7 +12,7 @@ const DaoPool = () => {
                 <div className={s.rewardsContainer}>
                     <div className={s.annualRate}>
                         <div className={s.rate}>
-                            {fmtApi3(web3.apy)}%
+                            {web3.apy}%
                         </div>
                         <div className={s.reward}>
                             Annual rewards
@@ -23,7 +22,7 @@ const DaoPool = () => {
                     </div>
                     <div className={s.annualReward}>
                         <div className={s.rate}>
-                            {fmtApi3(web3.ait || BigNumber.from(0))}%
+                            {web3.annualInflationRate}%
                         </div>
                         <div className={s.reward}>
                             Annual Inflation
@@ -46,7 +45,6 @@ const DaoPool = () => {
                         </div>
                     </div>
                 </div>
-                <div>Chart</div>
             </div>
         </div>
     )

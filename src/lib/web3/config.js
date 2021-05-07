@@ -1,9 +1,10 @@
-import {Contract, BigNumber, utils} from 'ethers'
+import {Contract, BigNumber, FixedNumber, utils} from 'ethers'
 import {InjectedConnector} from '@web3-react/injected-connector'
 import {WalletConnectConnector} from '@web3-react/walletconnect-connector'
 import {flatten} from 'lodash-es'
 import poolABI from './contracts/pool-abi'
 import tokenABI from './contracts/token-abi'
+import mainVotingABI from './contracts/main-voting-abi'
 
 const
     {parseEther} = utils,
@@ -33,14 +34,17 @@ export const contractAddresses = {
     1: {
         pool: process.env.POOL_CONTRACT_ADDR_MAINNET,
         token: process.env.TOKEN_CONTRACT_ADDR_MAINNET,
+        mainVoting: process.env.MAIN_VOTING_CONTRACT_ADDR_MAINNET,
     },
     4: {
         pool: process.env.POOL_CONTRACT_ADDR_RINKEBY,
         token: process.env.TOKEN_CONTRACT_ADDR_RINKEBY,
+        mainVoting: process.env.MAIN_VOTING_CONTRACT_ADDR_RINKEBY,
     },
     [DEVCHAIN_ID]: {
         pool: process.env.POOL_CONTRACT_ADDR_DEV,
         token: process.env.TOKEN_CONTRACT_ADDR_DEV,
+        mainVoting: process.env.MAIN_VOTING_CONTRACT_ADDR_DEV,
     },
 }
 
@@ -51,6 +55,14 @@ export const contractFactories = {
 
     token: (chainId, signer) =>
         new Contract(contractAddresses[chainId].token, tokenABI, signer),
+
+    mainVoting: (chainId, signer) =>
+        new Contract(contractAddresses[chainId].token, mainVotingABI, signer),
+}
+
+
+const formulas = {
+    apy: apr => (Math.pow(1 + Number(apr) / 1e8 / 52, 52) - 1) * 100,
 }
 
 
@@ -118,11 +130,6 @@ export const stateVars = {
         },
     },
 
-    apr: {
-        default: BigNumber.from(0),
-        getter: ({contracts}) => contracts.pool.currentApr(),
-    },
-
     totalStake: {
         default: BigNumber.from(0),
         getter: ({contracts}) => contracts.pool.totalStake(),
@@ -132,28 +139,91 @@ export const stateVars = {
         default: BigNumber.from(0),
         getter: ({contracts}) => contracts.pool.stakeTarget(),
     },
-    
-    apy: {
-        default: BigNumber.from(0),
-        getter: async ({contracts}) => 
-            BigNumber.from(1).add(
-                (await contracts.pool.currentApr()).mul(
-                    BigNumber.from(52).div(BigNumber.from(BigNumber.from(10)
-                        .pow(18))))).pow(52)
-                .sub(BigNumber.from(1)),
-    },
-    
-    ait: {
-        default: BigNumber.from(0),
+
+    targetMet: {
+        default: '0.00',
         getter: async ({contracts}) => {
-            let currApy = contracts.pool.currentApr()
-            let totalStake = contracts.pool.totalStake()
-            let totalSupply = contracts.pool.totalSupply()
-            let annualMintedToken = (await totalStake)
-                .mul((await currApy).div(100))
-            return (await annualMintedToken)
-                .div((await annualMintedToken)
-                    .add((await totalSupply)).mul(100))
+            const
+                totalStake = await contracts.pool.totalStake(),
+                stakeTarget = await contracts.pool.stakeTarget()
+
+            if (totalStake.gte(stakeTarget))
+                return '100.0'
+
+            return FixedNumber.from(totalStake.toString())
+                .mulUnsafe(FixedNumber.from(100))
+                .divUnsafe(FixedNumber.from(stakeTarget.toString()))
+                .round(1)
+                .toString()
+        },
+    },
+
+    apy: {
+        default: '0.00',
+        getter: async ({contracts}) =>
+            formulas.apy(await contracts.pool.currentApr()).toFixed(1),
+    },
+
+    annualInflationRate: {
+        default: '0.00',
+        getter: async ({contracts}) => {
+            const
+                apy = formulas.apy(await contracts.pool.currentApr()),
+
+                totalStake = await contracts.pool.totalStake(),
+                totalSupply = await contracts.token.totalSupply(),
+
+                annualMintedTokens =
+                    FixedNumber.from(totalStake.toString())
+                        .mulUnsafe(FixedNumber.from(apy.toFixed(2)))
+                        .divUnsafe(FixedNumber.from(100)),
+
+                annualInflationRate =
+                    annualMintedTokens
+                        .divUnsafe(
+                            annualMintedTokens.addUnsafe(
+                                FixedNumber.from(totalSupply.toString())),
+                        )
+                        .mulUnsafe(FixedNumber.from(100))
+                        .round(1)
+                        .toString()
+
+            return annualInflationRate
+        },
+    },
+
+    pendingUnstake: {
+        default: null,
+
+        getter: async ({contracts, address}) => {
+            const
+                pc = contracts.pool,
+
+                scheduleUnstakeEvents =
+                    await pc.queryFilter(pc.filters.ScheduledUnstake(address))
+
+            if (!scheduleUnstakeEvents.length)
+                return null
+
+            const
+                lastScheduleUnstakeEvent = scheduleUnstakeEvents.pop(),
+
+                unstakeEventsAfterLastSchedule =
+                    await pc.queryFilter(
+                        pc.filters.Unstaked(address),
+                        lastScheduleUnstakeEvent.blockNumber,
+                    )
+
+            if (unstakeEventsAfterLastSchedule.length)
+                // means that there is no pending unstaking
+                return null
+
+            const
+                {amount, scheduledFor} = lastScheduleUnstakeEvent.args,
+
+                deadline = scheduledFor.add(await pc.EPOCH_LENGTH())
+
+            return {amount, scheduledFor, deadline}
         },
     },
 }
@@ -184,6 +254,25 @@ export const actions = {
 
     stake: (amount, web3) =>
         web3.contracts.pool.stake(parseEther(amount)),
+
+    scheduleUnstake: (amount, web3) =>
+        web3.contracts.pool.scheduleUnstake(parseEther(amount)),
+
+    unstake: web3 =>
+        web3.contracts.pool.unstake(),
+
+    unstakeAndWithdraw: web3 =>
+        web3.contracts.pool.unstakeAndWithdraw(web3.account),
+
+    createProposal: async (description, web3) => {
+        console.info('creating proposal', description, web3.contracts.mainVoting)
+
+        const reply = await web3.contracts.mainVoting['newVote(bytes,string)']('0x00', description)
+
+        console.log('REPLY', reply)
+
+        return reply
+    },
 }
 
 

@@ -1,0 +1,49 @@
+ul.proposals {
+    list-style-type: none;
+    padding: 0;
+}
+ul.proposals > li {
+    border-top: 1px solid #777;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+}
+.info { flex-basis: 50%; }
+.votebar { flex-basis: 30%; }
+
+.info > h3 {
+    color: #ddd;
+    margin: 10px 0 20px;
+}
+.info.passed > h3,
+.info.rejected > h3 {
+    color: #555;
+}
+.info > section {
+    display: flex;
+    justify-content: space-between;
+}
+
+.status {
+    font-weight: bold;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+}
+.status.passed { color: #7ce3cb; }
+.status.rejected { color: #d233f2; }
+
+.idAndRemaining {
+    font-size: 0.9em;
+}
+.info.passed .idAndRemaining,
+.info.rejected .idAndRemaining {
+    color: #555;
+}
+
+.link {
+    font-size: 24px;
+    color: #7ce3cb;
+    text-decoration: none;
+}

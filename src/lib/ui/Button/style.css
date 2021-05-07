@@ -4,23 +4,33 @@
     padding: 10px;
     background-color: transparent;
     cursor: pointer;
-    color: #777;
 }
 
 .button.variant-primary {
-    border: 1px solid #777;
+    border: 1px solid #7ce3cb;
+    color: #777;
 }
 .button.variant-primary::after {
     position: absolute;
     left: -1px;
     bottom: -5px;
     width: calc(100% + 2px);
-    border-bottom: 1px solid #777;
+    border-bottom: 1px solid #7ce3cb;
     content: '';
 }
 .button.variant-link {
+    color: #7ce3cb;
     border-width: 0;
     text-decoration: underline;
+}
+
+.button:disabled {
+    border-color: #777;
+    color: #777;
+    cursor: not-allowed;
+}
+.button.variant-primary:disabled::after {
+    border-bottom-color: #777;
 }
 
 .button .prefix {

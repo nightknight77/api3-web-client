@@ -7,11 +7,14 @@ import {fmtApi3} from 'lib/util'
 import WalletManager from './WalletManager'
 import Balance from './Balance'
 import Staking from './Staking'
+import Unstaking from './Unstaking'
+import DAOPool from './DAOPool'
 import Faucet from './Faucet'
 import logoImg from './logo.svg'
 import DaoPool from './DaoPool'
 
-const {deposit, withdraw, stake, grantInfiniteAllowanceToPool} = actions
+const {deposit, withdraw, stake,
+    scheduleUnstake, grantInfiniteAllowanceToPool} = actions
 
 
 const sections = (web3, modal) => [
@@ -59,6 +62,17 @@ const sections = (web3, modal) => [
                 onSubmit: val => stake(val, web3).then(modal.close),
             }),
         },
+        cta2: {
+            title: 'Initiate Unstake',
+            action: () => modal.open(TransferForm, {
+                intent: 'unstake',
+                onSubmit: val => scheduleUnstake(val, web3).then(modal.close),
+            }),
+        },
+    },
+    web3.pendingUnstake && {
+        title: 'Unstaking',
+        component: Unstaking,
     },
     web3.chainId === 4 && {
         title: 'Faucet',
@@ -94,7 +108,7 @@ const Landing = () => {
                     cta2={cta2}
                     style={{
                         flex: '0 0 250px',
-                        height: 200,
+                        height: 240,
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
