@@ -13,7 +13,7 @@ const DaoPool = () => {
                 <div className={s.rewardsContainer}>
                     <div className={s.annualRate}>
                         <div className={s.rate}>
-                            {fmtApi3(web3.apy || BigNumber.from(0))}%
+                            {fmtApi3(web3.apy)}%
                         </div>
                         <div className={s.reward}>
                             Annual rewards
@@ -36,13 +36,13 @@ const DaoPool = () => {
                     <div className={s.stakeContainer}>
                         <div>TOTAL STAKED</div>
                         <div className={s.stakeAmount}>
-                            {fmtApi3(web3.totalStake || BigNumber.from(0))}
+                            {fmtApi3(web3.totalStake)}
                         </div>
                     </div>
                     <div className={s.stakeContainer + ' ' + s.target}>
                         <div>STAKING TARGET</div>
                         <div className={s.stakeAmount}>
-                            {fmtApi3(web3.stakeTarget || BigNumber.from(0))}
+                            {fmtApi3(web3.stakeTarget)}
                         </div>
                     </div>
                 </div>

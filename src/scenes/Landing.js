@@ -9,7 +9,6 @@ import Balance from './Balance'
 import Staking from './Staking'
 import Faucet from './Faucet'
 import logoImg from './logo.svg'
-// Import the DAOPool scene
 import DaoPool from './DaoPool'
 
 const {deposit, withdraw, stake, grantInfiniteAllowanceToPool} = actions

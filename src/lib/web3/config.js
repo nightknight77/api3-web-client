@@ -142,6 +142,7 @@ export const stateVars = {
                         .pow(18))))).pow(52)
                 .sub(BigNumber.from(1)),
     },
+    
     ait: {
         default: BigNumber.from(0),
         getter: async ({contracts}) => {
