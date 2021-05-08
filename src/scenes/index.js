@@ -1,4 +1,4 @@
-export {default as Landing} from './Landing'
+export {default as Dashboard} from './Dashboard'
 export {default as WalletManager} from './WalletManager'
 export {default as Balance} from './Balance'
 export {default as Staking} from './Staking'
