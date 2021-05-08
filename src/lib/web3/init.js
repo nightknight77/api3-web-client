@@ -66,6 +66,8 @@ export const activateWeb3 = async (serviceName, web3Ctx) => {
 
     await web3Ctx.activate(con, null, true)
 
+    web3Ctx.update({currentWalletServiceName: serviceName})
+
     const [account, provider, chainId] = await Promise.all([
         con.getAccount(),
         con.getProvider(),

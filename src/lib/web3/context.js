@@ -10,6 +10,7 @@ const {Web3Provider: Web3EthersProvider} = providers
 
 const initialWeb3AccountValue = {
     contracts: {},
+    currentWalletServiceName: null,
     ...mapValues(stateVars, v => v.default),
 }
 
@@ -56,6 +57,7 @@ export const useWeb3 = () => {
 
         deactivate: async () => {
             await web3React.deactivate()
+            web3Account.update({currentWalletServiceName: null})
             handleWeb3Deactivate(web3)
         },
     }
