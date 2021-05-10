@@ -2,13 +2,14 @@ import React, {createElement, useState} from 'react'
 import {capitalize} from 'lodash-es'
 import {useWeb3, actions, allowanceRefillThreshold} from 'lib/web3'
 import {useModal} from 'lib/modal'
-import {Card, Input, Button} from 'lib/ui'
+import {Card, Input, Button, Slider} from 'lib/ui'
 import {fmtApi3} from 'lib/util'
 import WalletManager from './WalletManager'
 import Balance from './Balance'
 import Staking from './Staking'
 import Unstaking from './Unstaking'
 import DAOPool from './DAOPool'
+import s from './dashboard.css'
 
 const {deposit, withdraw, stake,
     scheduleUnstake, grantInfiniteAllowanceToPool} = actions
@@ -78,12 +79,23 @@ const Landing = () => {
         sections_ = sections(web3, modal)
 
     return <>
+        <Slider
+            className={s.slider}
+
+            slides={[
+                'lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum',
+                'consectetuer adipisicing elit consectetuer adipisicing elit conse',
+                'sed do eiusmod tempor sed do eiusmod tempor sed do eiusmod tempor',
+            ]}
+        />
+
         <div
             style={{
                 display: 'flex',
                 flexWrap: 'wrap',
                 alignItems: 'center',
                 justifyContent: 'center',
+                marginTop: 50,
             }}
             children={sections_.map(({title, component, cta1, cta2}) =>
                 <Card

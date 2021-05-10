@@ -6,6 +6,7 @@ import {Web3Provider, useWeb3, initWeb3} from './lib/web3'
 import {ModalProvider} from './lib/modal'
 import Layout from './Layout'
 import './global.css'
+import '../node_modules/react-responsive-carousel/lib/styles/carousel.min.css'
 
 
 const boot = () =>

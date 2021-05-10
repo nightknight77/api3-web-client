@@ -1,0 +1,53 @@
+.foo {
+}
+.item {
+    font-size: 20px;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.item > p {
+    line-height: 1.5em;
+}
+.arrowImg {
+    position: absolute;
+    top: 0;
+    width: auto !important;
+    height: 140px;
+    pointer-events: all !important;
+    z-index: 1000;
+}
+.arrowImg.clickable { cursor: pointer; }
+.arrowImg.prev { left: 0 }
+.arrowImg.next { right: 0 }
+
+.stepNo {
+    position: relative;
+}
+.stepNo > img {
+    width: 125px !important;
+}
+.stepNo > h1 {
+    position: absolute;
+    top: 25px;
+    left: 50%;
+    margin: 0;
+    transform: translateX(-50%);
+    font-size: 52px;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1px white;
+}
+
+.indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 8px;
+    margin: 2px;
+    border: 1px solid #888;
+    cursor: pointer;
+}
+.indicator.active {
+    border-color: #7ce3cb;
+}

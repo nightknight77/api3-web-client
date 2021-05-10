@@ -87,6 +87,7 @@ module.exports = {
 
             {
                 test: /\.css$/,
+                exclude: [cwd + '/node_modules'],
                 use: [
                     isDev ? 'style-loader' : MiniCSSExtractPlugin.loader,
 
@@ -96,6 +97,15 @@ module.exports = {
                             localIdentName: '[local]--[hash:base64:10]',
                         },
                     }},
+                ],
+            },
+
+            {
+                test: /\.css$/,
+                include: [cwd + '/node_modules'],
+                use: [
+                    isDev ? 'style-loader' : MiniCSSExtractPlugin.loader,
+                    'css-loader',
                 ],
             },
 
