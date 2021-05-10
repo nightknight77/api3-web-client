@@ -9,8 +9,6 @@ import Balance from './Balance'
 import Staking from './Staking'
 import Unstaking from './Unstaking'
 import DAOPool from './DAOPool'
-import Faucet from './Faucet'
-import logoImg from './logo.svg'
 
 const {deposit, withdraw, stake,
     scheduleUnstake, grantInfiniteAllowanceToPool} = actions
@@ -18,12 +16,8 @@ const {deposit, withdraw, stake,
 
 const sections = (web3, modal) => [
     {
-        title: 'Wallet',
-        component: WalletManager,
-        cta1: web3.active && {
-            title: 'Disconnect',
-            action: web3.deactivate,
-        },
+        title: 'DAO Pool',
+        component: DAOPool,
     },
     {
         title: 'Balance',
@@ -73,14 +67,6 @@ const sections = (web3, modal) => [
         title: 'Unstaking',
         component: Unstaking,
     },
-    {
-        title: 'DAO Pool',
-        component: DAOPool,
-    },
-    web3.chainId === 4 && {
-        title: 'Faucet',
-        component: Faucet,
-    },
 ]
     .filter(Boolean)
 
@@ -92,10 +78,6 @@ const Landing = () => {
         sections_ = sections(web3, modal)
 
     return <>
-        <h1 style={{textAlign: 'center'}}>
-            <img src={logoImg} />
-        </h1>
-
         <div
             style={{
                 display: 'flex',
