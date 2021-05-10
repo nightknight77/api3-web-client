@@ -26,9 +26,7 @@ const handleWeb3Activate = serviceName =>
 
 export const handleWeb3Deactivate = web3Ctx => {
     localStorage.removeItem('lastWeb3Service')
-    state.provider.removeAllListeners()
-    resetState()
-    updateWeb3Numbers(state.blockNo, web3Ctx)
+    handleAccountOrChainChange(web3Ctx)
 }
 
 
@@ -88,9 +86,14 @@ export const activateWeb3 = async (serviceName, web3Ctx) => {
 
 const handleAccountOrChainChange = async (
     web3Ctx,
-    {account, chainId, provider},
+    {account, chainId, provider} = {},
 ) => {
     web3Ctx.update(mapValues(stateVars, v => v.default))
+
+    if (!account && !provider) {
+        state.provider.removeAllListeners()
+        resetState()
+    }
 
     if (account) {
         state.account = account
