@@ -4,6 +4,7 @@ import {RouterProvider, Route} from 'react-router5'
 import {router, routesByName} from './routing'
 import {Web3Provider, useWeb3, initWeb3} from './lib/web3'
 import {ModalProvider} from './lib/modal'
+import Layout from './Layout'
 import './global.css'
 
 
@@ -24,9 +25,10 @@ const App = ({router}) =>
         <Web3Provider children={
             <ModalProvider children={
                 <AppInitializer children={
-                    <Route children={({route}) =>
-                        createElement(routesByName[route.name].component)
-                    } />} />} />} /> } />
+                    <Layout children={
+                        <Route children={({route}) =>
+                            createElement(routesByName[route.name].component)
+                        } />} />} />} /> } /> } />
 
 
 const AppInitializer = ({children}) => {
