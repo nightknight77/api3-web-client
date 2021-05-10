@@ -6,8 +6,8 @@ import {Dashboard, ProposalListing} from './scenes'
 
 
 const routes = [
-    {name: 'dashboard',     path: '/',          component: Dashboard},
-    {name: 'proposal-list', path: '/proposals', component: ProposalListing},
+    {name: 'dashboard', path: '/',          component: Dashboard},
+    {name: 'proposals', path: '/proposals', component: ProposalListing},
 ]
 
 export const routesByName = keyBy(routes, 'name')
