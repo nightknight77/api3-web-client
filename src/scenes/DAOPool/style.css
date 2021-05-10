@@ -1,3 +1,47 @@
-.list li {
-    margin-bottom: 1em;
+.root {
+    display: flex;
+}
+.root > * {
+    margin-right: 40px;
+}
+.root > table {
+    border-collapse: collapse;
+}
+.root > table:first-child {
+    max-width: 340px;
+}
+.root th,
+.root td {
+    height: 50px;
+    border-top: 1px solid #404141;
+    padding: 15px;
+    text-align: right;
+}
+.root table th {
+    font-weight: normal;
+    line-height: 1.5em;
+}
+.root table td {
+    color: white;
+}
+tr.apy th,
+tr.inflation th {
+    text-align: left;
+}
+tr.apy > td {
+    font-size: 40px;
+}
+tr.inflation > td {
+    font-size: 24px;
+}
+.root figure {
+    color: white;
+    font-weight: bold;
+    margin: 0;
+}
+.root figcaption {
+    white-space: nowrap;
+    color: #bbb;
+    margin-bottom: 5px;
+    font-size: 12px;
 }

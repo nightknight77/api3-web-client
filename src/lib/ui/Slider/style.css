@@ -2,7 +2,7 @@
 }
 .item {
     font-size: 20px;
-    padding: 20px 40px;
+    padding: 0 40px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,7 +12,7 @@
 }
 .arrowImg {
     position: absolute;
-    top: 0;
+    top: -15px;
     width: auto !important;
     height: 140px;
     pointer-events: all !important;

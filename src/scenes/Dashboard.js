@@ -17,10 +17,6 @@ const {deposit, withdraw, stake,
 
 const sections = (web3, modal) => [
     {
-        title: 'DAO Pool',
-        component: DAOPool,
-    },
-    {
         title: 'Balance',
         component: Balance,
         cta1: (
@@ -78,16 +74,26 @@ const Landing = () => {
         modal = useModal(),
         sections_ = sections(web3, modal)
 
-    return <>
-        <Slider
-            className={s.slider}
+    return <div className={s.root}>
+        <section>
+            <h2 className={s.heading} children='How This Works' />
 
-            slides={[
-                'lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum',
-                'consectetuer adipisicing elit consectetuer adipisicing elit conse',
-                'sed do eiusmod tempor sed do eiusmod tempor sed do eiusmod tempor',
-            ]}
-        />
+            <Slider
+                className={s.slider}
+
+                slides={[
+                    'lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum',
+                    'consectetuer adipisicing elit consectetuer adipisicing elit conse',
+                    'sed do eiusmod tempor sed do eiusmod tempor sed do eiusmod tempor',
+                ]}
+            />
+        </section>
+
+        <section>
+            <h2 className={s.heading} children='Staking Pool' />
+
+            <DAOPool />
+        </section>
 
         <div
             style={{
@@ -114,7 +120,7 @@ const Landing = () => {
                 />,
             )}
         />
-    </>
+    </div>
 }
 
 export default Landing
