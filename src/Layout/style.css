@@ -16,12 +16,17 @@
     cursor: pointer;
 }
 .root > header > .walletConnection > .connectionDot {
-    width: 10px;
-    height: 10px;
-    border-radius: 10px;
+    width: 12px;
+    height: 12px;
+    margin: 0 15px;
+    border-radius: 12px;
     border: 2px solid black;
     background-color: #7ce3cb;
     box-shadow: 0 0 4px #7ce3cb;
+}
+.root > header > .walletConnection .providerInfo {
+    margin-top: 4px;
+    font-size: 0.8em;
 }
 .root > section {
     display: flex;
@@ -57,4 +62,7 @@
     bottom: -30px;
     font-size: 24px;
     color: white;
+}
+.walletDetails {
+    text-align: center;
 }

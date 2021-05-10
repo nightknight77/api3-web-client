@@ -46,7 +46,11 @@ const Layout = ({children}) => {
                     <div className={s.connectionDot} />
                     <div>
                         <div>{abbr(web3.account, 9, 4, '....')}</div>
-                        <div>Connected to {web3.currentWalletServiceName}</div>
+
+                        <div
+                            className={s.providerInfo}
+                            children={`Connected to ${web3.currentWalletServiceName}`}
+                        />
                     </div>
                 </div>}
         </header>
@@ -120,19 +124,19 @@ const serviceColors = {
 
 
 const WalletDetails = ({web3, onDeactivate = noop}) =>
-    <>
-        <div children={web3.account} />
+    <div className={s.walletDetails}>
+        <p children={web3.account} />
 
-        <div children={web3.currentWalletServiceName} />
+        <p children={`Connected to ${web3.currentWalletServiceName}`} />
 
         <Button
-            children='Deactivate'
+            children='Disconnect'
             onClick={() => {
                 web3.deactivate()
                 onDeactivate()
             }}
         />
-    </>
+    </div>
 
 
 export default Layout
