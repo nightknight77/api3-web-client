@@ -1,10 +1,9 @@
-import React, {createElement, useState} from 'react'
+import React, {useState} from 'react'
 import {capitalize} from 'lodash-es'
 import {useWeb3, actions, allowanceRefillThreshold} from 'lib/web3'
 import {useModal} from 'lib/modal'
 import {Card, Input, Button, Slider} from 'lib/ui'
 import {fmtApi3} from 'lib/util'
-import WalletManager from './WalletManager'
 import Balance from './Balance'
 import Staking from './Staking'
 import Unstaking from './Unstaking'
@@ -15,64 +14,10 @@ const {deposit, withdraw, stake,
     scheduleUnstake, grantInfiniteAllowanceToPool} = actions
 
 
-const sections = (web3, modal) => [
-    {
-        title: 'Balance',
-        component: Balance,
-        cta1: (
-            web3.poolAllowance &&
-                web3.poolAllowance.lt(allowanceRefillThreshold)
-        ) ?
-            {
-                title: 'Approve',
-                action: () => grantInfiniteAllowanceToPool(web3),
-            } : {
-                title: 'Deposit',
-                action: () => modal.open(TransferForm, {
-                    intent: 'deposit',
-                    onSubmit: val => deposit(val, web3).then(modal.close),
-                    children: `(Undeposited: ${fmtApi3(web3.api3Balance)})`,
-                }),
-            },
-        cta2: {
-            title: 'Withdraw',
-            action: () => modal.open(TransferForm, {
-                intent: 'withdraw',
-                onSubmit: val => withdraw(val, web3).then(modal.close),
-            }),
-        },
-    },
-    {
-        title: 'Staking',
-        component: Staking,
-        cta1: {
-            title: 'Stake',
-            action: () => modal.open(TransferForm, {
-                intent: 'stake',
-                onSubmit: val => stake(val, web3).then(modal.close),
-            }),
-        },
-        cta2: {
-            title: 'Initiate Unstake',
-            action: () => modal.open(TransferForm, {
-                intent: 'unstake',
-                onSubmit: val => scheduleUnstake(val, web3).then(modal.close),
-            }),
-        },
-    },
-    web3.pendingUnstake && {
-        title: 'Unstaking',
-        component: Unstaking,
-    },
-]
-    .filter(Boolean)
-
-
 const Landing = () => {
     const
         web3 = useWeb3(),
-        modal = useModal(),
-        sections_ = sections(web3, modal)
+        modal = useModal()
 
     return <div className={s.root}>
         <section>
@@ -95,31 +40,58 @@ const Landing = () => {
             <DAOPool />
         </section>
 
-        <div
-            style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginTop: 50,
-            }}
-            children={sections_.map(({title, component, cta1, cta2}) =>
-                <Card
-                    key={component.name}
-                    title={title}
-                    cta1={cta1}
-                    cta2={cta2}
-                    style={{
-                        flex: '0 0 250px',
-                        height: 240,
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}
-                    children={<div children={createElement(component)} />}
-                />,
-            )}
-        />
+        <section className={s.balanceAndStaking}>
+            <Card
+                title='Balance'
+                children={<Balance />}
+                cta1={(
+                    web3.poolAllowance &&
+                        web3.poolAllowance.lt(allowanceRefillThreshold)
+                ) ?
+                    {
+                        title: 'Approve',
+                        action: () => grantInfiniteAllowanceToPool(web3),
+                    } : {
+                        title: 'Deposit',
+                        action: () => modal.open(TransferForm, {
+                            intent: 'deposit',
+                            onSubmit: val =>
+                                deposit(val, web3).then(modal.close),
+                            children:
+                                `(Undeposited: ${fmtApi3(web3.api3Balance)})`,
+                        }),
+                    }
+                }
+                cta2={{
+                    title: 'Withdraw',
+                    action: () => modal.open(TransferForm, {
+                        intent: 'withdraw',
+                        onSubmit: val => withdraw(val, web3).then(modal.close),
+                    }),
+                }}
+            />
+
+            <Card
+                title='Staking'
+                children={<Staking />}
+                cta1={{
+                    title: 'Stake',
+                    action: () => modal.open(TransferForm, {
+                        intent: 'stake',
+                        onSubmit: val => stake(val, web3).then(modal.close),
+                    }),
+                }}
+                cta2={{
+                    title: 'Initiate Unstake',
+                    action: () => modal.open(TransferForm, {
+                        intent: 'unstake',
+                        onSubmit: val =>
+                            scheduleUnstake(val, web3).then(modal.close),
+                    }),
+                }}
+                extension={web3.pendingUnstake && <Unstaking />}
+            />
+        </section>
     </div>
 }
 
