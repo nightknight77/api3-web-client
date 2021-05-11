@@ -8,6 +8,7 @@ import tokenABI from './contracts/token-abi'
 const
     {parseEther} = utils,
     {MAINNET_URL, RINKEBY_URL, DEVCHAIN_URL, DEVCHAIN_ID} = process.env,
+    {round} = Math,
     {keys, values} = Object
 
 
@@ -175,7 +176,7 @@ export const stateVars = {
                     annualMintedTokens
                         .divUnsafe(
                             annualMintedTokens.addUnsafe(
-                                FixedNumber.from(totalSupply.toString()))
+                                FixedNumber.from(totalSupply.toString())),
                         )
                         .mulUnsafe(FixedNumber.from(100))
                         .round(1)
@@ -214,10 +215,17 @@ export const stateVars = {
             const
                 {amount, scheduledFor} = lastScheduleUnstakeEvent.args,
 
-                deadline = scheduledFor.add(await pc.EPOCH_LENGTH())
+                deadline = scheduledFor.add(await pc.EPOCH_LENGTH()),
 
-            return {amount, scheduledFor, deadline}
-        }
+                now = BigNumber.from(round((Date.now() / 1000))),
+
+                status =
+                    scheduledFor.gt(now)
+                        ? 'scheduled'
+                        : now.gt(deadline) ? 'overdue' : 'pending'
+
+            return {amount, scheduledFor, deadline, status}
+        },
     },
 }
 

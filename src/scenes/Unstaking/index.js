@@ -16,11 +16,7 @@ const Unstaking = () => {
         deadlineTs = web3.pendingUnstake.deadline.toNumber(),
         nowTs = Date.now() / 1000,
 
-        [status, setStatus] = useState(() => {
-            if (scheduledForTs > nowTs) return 'scheduled'
-            if (nowTs > deadlineTs) return 'overdue'
-            return 'pending'
-        }),
+        [status, setStatus] = useState(web3.pendingUnstake.status),
 
         [countdown, setCountdown] = useState(() =>
             Math.ceil({
