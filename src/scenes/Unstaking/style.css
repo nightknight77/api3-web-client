@@ -13,6 +13,7 @@ tr.amount td {
 table.cooldown td,
 table.cooldown th {
     line-height: 0.8em;
+    white-space: nowrap;
 }
 table.cooldown td {
     color: white;
@@ -28,5 +29,6 @@ p.deadlineWarning {
 p.footer {
     display: flex;
     justify-content: space-between;
-    align-items: space-between;
+    align-items: center;
+    margin-bottom: 0;
 }
