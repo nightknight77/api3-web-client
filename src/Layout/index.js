@@ -58,11 +58,11 @@ const Layout = ({children}) => {
         <section>
             <aside>
                 <img
-                    src={route.name === 'dashboard'
+                    src={route.name === 'staking'
                         ? dashboardActiveIcon
                         : dashboardIcon}
 
-                    onClick={() => router.navigate('dashboard')}
+                    onClick={() => router.navigate('staking')}
                 />
 
                 <img
@@ -86,7 +86,7 @@ const Layout = ({children}) => {
                     <div
                         className={s.headingBottom}
                         children={
-                            route.name !== 'dashboard'
+                            route.name !== 'staking'
                                 ? capitalize(route.name)
                                 : web3.account
                                     ? abbr(web3.account, 9, 4, '....')

@@ -6,7 +6,7 @@ import {Dashboard, ProposalListing} from './scenes'
 
 
 const routes = [
-    {name: 'dashboard', path: '/',          component: Dashboard},
+    {name: 'staking',   path: '/',          component: Dashboard},
     {name: 'proposals', path: '/proposals', component: ProposalListing},
 ]
 
