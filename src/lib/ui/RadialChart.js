@@ -5,7 +5,7 @@ const {round, PI, cos, sin} = Math
 
 const RadialChart = ({completionPercent}) => {
     const
-        r = 50,
+        r = 60,
         strokeWidth = 6,
         side = r * 2 + strokeWidth * 2,
         center = r + strokeWidth
@@ -28,7 +28,9 @@ const RadialChart = ({completionPercent}) => {
                 center,
                 r,
                 0,
-                round(completionPercent / 100 * 360),
+                completionPercent == 100
+                    ? 359
+                    : round(completionPercent / 100 * 360),
             )}
         />
 
@@ -38,7 +40,7 @@ const RadialChart = ({completionPercent}) => {
             textAnchor='middle'
             dominantBaseline='middle'
             fill='white'
-            fontSize={24}
+            fontSize={26}
             children={completionPercent + '%'}
         />
 
@@ -49,7 +51,7 @@ const RadialChart = ({completionPercent}) => {
             dominantBaseline='middle'
             fill='white'
             children='OF TARGET MET'
-            fontSize={8}
+            fontSize={9}
         />
 
         <defs>
