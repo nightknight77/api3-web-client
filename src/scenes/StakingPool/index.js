@@ -5,7 +5,7 @@ import {RadialChart} from 'lib/ui'
 import s from './style.css'
 
 
-const DAOPool = () => {
+const StakingPool = () => {
     const web3 = useWeb3()
 
     return <div className={s.root}>
@@ -45,4 +45,4 @@ const DAOPool = () => {
     </div>
 }
 
-export default DAOPool
+export default StakingPool

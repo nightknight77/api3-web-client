@@ -4,17 +4,17 @@ import {useWeb3, actions, allowanceRefillThreshold} from 'lib/web3'
 import {useModal} from 'lib/modal'
 import {Alert, Card, Input, Button, Slider} from 'lib/ui'
 import {fmtApi3, duration} from 'lib/util'
-import Balance from './Balance'
-import Staking from './Staking'
-import Unstaking from './Unstaking'
-import DAOPool from './DAOPool'
-import s from './dashboard.css'
+import Balance from '../Balance'
+import StakingStats from '../StakingStats'
+import Unstaking from '../Unstaking'
+import StakingPool from '../StakingPool'
+import s from './style.css'
 
 const {deposit, withdraw, stake, unstake,
     scheduleUnstake, grantInfiniteAllowanceToPool} = actions
 
 
-const Landing = () => {
+const Staking = () => {
     const
         web3 = useWeb3(),
         modal = useModal(),
@@ -56,7 +56,7 @@ const Landing = () => {
         <section>
             <h2 className={s.heading} children='Staking Pool' />
 
-            <DAOPool />
+            <StakingPool />
         </section>
 
         <section className={s.balanceAndStaking}>
@@ -92,7 +92,7 @@ const Landing = () => {
 
             <Card
                 title='Staking'
-                children={<Staking />}
+                children={<StakingStats />}
                 cta1={{
                     title: 'Stake',
                     action: () => modal.open(TransferForm, {
@@ -114,7 +114,7 @@ const Landing = () => {
     </div>
 }
 
-export default Landing
+export default Staking
 
 
 const TransferForm = ({intent, children, onSubmit}) => {

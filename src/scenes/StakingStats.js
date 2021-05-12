@@ -4,7 +4,7 @@ import {useWeb3} from 'lib/web3'
 import {fmtApi3} from 'lib/util'
 
 
-const Staking = () => {
+const StakingStats = () => {
     const web3 = useWeb3()
 
     return [
@@ -28,4 +28,4 @@ const Staking = () => {
 }
 
 
-export default Staking
+export default StakingStats
