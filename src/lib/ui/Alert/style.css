@@ -1,0 +1,24 @@
+.root {
+    max-width: 670px;
+    border: 1px solid rgba(124, 227, 203, 0.4);
+    border-width: 1px 0;
+    display: flex;
+    margin: 20px 0;
+    padding: 20px 0;
+    justify-content: space-between;
+    align-items: center;
+}
+.root > img {
+    height: 50px;
+}
+.root > div {
+    flex-grow: 1;
+    margin-left: 20px;
+}
+.root h4 {
+    color: white;
+}
+.root h4,
+.root p {
+    margin: 5px 0;
+}
