@@ -2,24 +2,43 @@ import React, {useState} from 'react'
 import {capitalize} from 'lodash-es'
 import {useWeb3, actions, allowanceRefillThreshold} from 'lib/web3'
 import {useModal} from 'lib/modal'
-import {Card, Input, Button, Slider} from 'lib/ui'
-import {fmtApi3} from 'lib/util'
+import {Alert, Card, Input, Button, Slider} from 'lib/ui'
+import {fmtApi3, duration} from 'lib/util'
 import Balance from './Balance'
 import Staking from './Staking'
 import Unstaking from './Unstaking'
 import DAOPool from './DAOPool'
 import s from './dashboard.css'
 
-const {deposit, withdraw, stake,
+const {deposit, withdraw, stake, unstake,
     scheduleUnstake, grantInfiniteAllowanceToPool} = actions
 
 
 const Landing = () => {
     const
         web3 = useWeb3(),
-        modal = useModal()
+        modal = useModal(),
+        remainingUnstakeDuration =
+            (web3.pendingUnstake && web3.pendingUnstake.status === 'pending')
+                ? duration(
+                    web3.pendingUnstake.deadline.toNumber() - Date.now() / 1000)
+
+                : null
 
     return <div className={s.root}>
+        {remainingUnstakeDuration &&
+            <Alert
+                title='Your tokens are ready to be unstaked.'
+                description={[
+                    `Unstake within ${remainingUnstakeDuration.days} days`,
+                    `${remainingUnstakeDuration.hrs} hours.`,
+                ].join(' ')}
+                cta={{
+                    title: 'Unstake',
+                    onClick: () => unstake(web3),
+                }}
+            />}
+
         <section>
             <h2 className={s.heading} children='How This Works' />
 
