@@ -3,7 +3,8 @@ import {capitalize} from 'lodash-es'
 import {useWeb3, actions, allowanceRefillThreshold} from 'lib/web3'
 import {useModal} from 'lib/modal'
 import {Alert, Card, Input, Button, Slider} from 'lib/ui'
-import {fmtApi3, duration} from 'lib/util'
+import {abbr, fmtApi3, duration} from 'lib/util'
+import Layout from 'Layout'
 import Balance from '../Balance'
 import StakingStats from '../StakingStats'
 import Unstaking from '../Unstaking'
@@ -25,7 +26,15 @@ const Staking = () => {
 
                 : null
 
-    return <div className={s.root}>
+    return <Layout
+        className={s.root}
+
+        subtitle={
+            web3.account
+                ? abbr(web3.account, 9, 4, '....')
+                : 'Welcome to the API3 DAO'
+        }
+    >
         {remainingUnstakeDuration &&
             <Alert
                 title='Your tokens are ready to be unstaked.'
@@ -113,7 +122,7 @@ const Staking = () => {
                 extension={web3.pendingUnstake && <Unstaking />}
             />
         </section>
-    </div>
+    </Layout>
 }
 
 export default Staking

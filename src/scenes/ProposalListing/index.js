@@ -2,6 +2,7 @@ import React from 'react'
 import {Card, VoteBar} from 'lib/ui'
 import {duration} from 'lib/util'
 import {padStart, capitalize} from 'lodash-es'
+import Layout from 'Layout'
 import statusActiveIcon from './status-active.png'
 import s from './style.css'
 
@@ -31,7 +32,7 @@ const mockProposals = [{
 
 
 const Proposals = () => {
-    return <Card
+    return <Layout><Card
         cta1={{
             title: 'New Proposal',
             action: () => alert('Not implemented yet'),
@@ -82,7 +83,7 @@ const Proposals = () => {
                 </li>,
             )}
         </ul>
-    </Card>
+    </Card></Layout>
 }
 
 

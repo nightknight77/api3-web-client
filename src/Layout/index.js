@@ -13,7 +13,7 @@ import proposalsActiveIcon from './proposals-active-icon.svg'
 import s from './style.css'
 
 
-const Layout = ({children}) => {
+const Layout = ({category, title, subtitle, className, children}) => {
     const
         {route, router} = useRoute(),
         web3 = useWeb3(),
@@ -77,25 +77,20 @@ const Layout = ({children}) => {
 
             <main>
                 <h1>
-                    {capitalize(route.name)}
+                    {category || capitalize(route.name)}
 
                     <div
                         className={s.headingMiddle}
-                        children={capitalize(route.name)}
+                        children={title || capitalize(route.name)}
                     />
 
                     <div
                         className={s.headingBottom}
-                        children={
-                            route.name !== 'staking'
-                                ? capitalize(route.name)
-                                : web3.account
-                                    ? abbr(web3.account, 9, 4, '....')
-                                    : 'Welcome to the API3 DAO'}
+                        children={subtitle || capitalize(route.name)}
                     />
                 </h1>
 
-                <div>{children}</div>
+                <div className={className} children={children} />
             </main>
         </section>
     </div>
