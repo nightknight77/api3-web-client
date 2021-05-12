@@ -1,5 +1,4 @@
 import React from 'react'
-import {BigNumber} from 'ethers'
 import {useWeb3} from 'lib/web3'
 import {fmtApi3} from 'lib/util'
 

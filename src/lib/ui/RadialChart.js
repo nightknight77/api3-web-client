@@ -62,8 +62,8 @@ const RadialChart = ({completionPercent}) => {
                 y1='0%'
                 y2='0%'
             >
-                 <stop offset='0%' stop-color='#7ce3cb' />
-                 <stop offset='100%' stop-color='#7963b2' />
+                <stop offset='0%' stopColor='#7ce3cb' />
+                <stop offset='100%' stopColor='#7963b2' />
             </linearGradient>
         </defs>
     </svg>

@@ -46,9 +46,11 @@ const Staking = () => {
                 className={s.slider}
 
                 slides={[
+                    /* eslint-disable max-len */
                     'lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum',
                     'consectetuer adipisicing elit consectetuer adipisicing elit conse',
                     'sed do eiusmod tempor sed do eiusmod tempor sed do eiusmod tempor',
+                    /* eslint-enable max-len */
                 ]}
             />
         </section>

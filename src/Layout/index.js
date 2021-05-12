@@ -49,7 +49,8 @@ const Layout = ({children}) => {
 
                         <div
                             className={s.providerInfo}
-                            children={`Connected to ${web3.currentWalletServiceName}`}
+                            children={
+                                `Connected to ${web3.currentWalletServiceName}`}
                         />
                     </div>
                 </div>}
